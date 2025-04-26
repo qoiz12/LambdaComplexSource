@@ -8,6 +8,7 @@
 //=============================================================================//
 #include "iengine.h"
 #include <stdlib.h>
+#include <lcs_shareddefs.h>
 
 #include "engine_launcher_api.h"
 #include "basetypes.h"
@@ -75,8 +76,11 @@ private:
 static CGame g_Game;
 IGame *game = ( IGame * )&g_Game;
 
+#ifndef LAMBDA
 const char CGame::CLASSNAME[] = "Valve001";
-
+#else
+const char CGame::CLASSNAME[] = "LambdaComplexInstance"
+#endif
 // In VCR playback mode, it sleeps this amount each frame.
 int g_iVCRPlaybackSleepInterval = 0;
 

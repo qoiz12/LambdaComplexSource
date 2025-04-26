@@ -1088,7 +1088,7 @@ bool GrabSourceMutex()
 	if ( IsPC() )
 	{
 		// don't allow more than one instance to run
-		g_hMutex = ::CreateMutex(NULL, FALSE, TEXT("hl2_singleton_mutex"));
+		g_hMutex = ::CreateMutex(NULL, FALSE, TEXT("lcs_singleton_mutex"));
 
 		unsigned int waitResult = ::WaitForSingleObject(g_hMutex, 0);
 
@@ -1780,7 +1780,7 @@ extern "C" DLL_EXPORT int LauncherMain( int argc, char **argv )
 			// directly from the web browser. The -hijack command prevents the launcher from objecting that there is already an instance of the game.
 			if (CommandLine()->CheckParm( "-hijack" ))
 			{
-				HWND hwndEngine = FindWindow( "Valve001", NULL );
+				HWND hwndEngine = FindWindow( "LambdaComplexInstance", NULL );
 
 				// Can't find the engine
 				if ( hwndEngine == NULL )

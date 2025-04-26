@@ -273,9 +273,9 @@ int PS3_WindowProc_Proxy( xevent_t const &ev )
 #endif
 
 #if !defined( _X360 )
-const wchar_t CGame::CLASSNAME[] = L"Valve001";
+const wchar_t CGame::CLASSNAME[] = L"LambdaComplexInstance";
 #else
-const char CGame::CLASSNAME[] = "Valve001";
+const char CGame::CLASSNAME[] = "LambdaComplexInstance";
 #endif
 
 // In VCR playback mode, it sleeps this amount each frame.
