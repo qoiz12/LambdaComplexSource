@@ -18,6 +18,7 @@
 #include "mathlib/bumpvects.h"
 #include "mathlib/compressed_light_cube.h"
 #include "datalinker_interface.h"
+#include "lcs_shareddefs.h"
 
 // little-endian "VBSP"
 #define IDBSPHEADER	(('P'<<24)+('S'<<16)+('B'<<8)+'V')		

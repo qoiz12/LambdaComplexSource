@@ -45,6 +45,8 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+// lcs_shareddefs.h should be included if you want to use definitions!!
+#include "lcs_shareddefs.h"
 
 //-----------------------------------------------------------------------------
 // Forward declarations
@@ -57,7 +59,11 @@ int Sys_InitGame( CreateInterfaceFn appSystemFactory,
 ConVar engine_no_focus_sleep( "engine_no_focus_sleep", "50", FCVAR_ARCHIVE );
 
 
-#define DEFAULT_FPS_MAX	300
+#if defined(LCS)
+#define DEFAULT_FPS_MAX	999
+#else
+#define DEFAULT_FPS_MAX 300
+#endif
 static int s_nDesiredFPSMax = DEFAULT_FPS_MAX;
 static bool s_bFPSMaxDrivenByPowerSavings = false;
 
