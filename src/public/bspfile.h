@@ -54,11 +54,6 @@
 #define NUM_DISP_POWER_VERTS(power)	( ((1 << (power)) + 1) * ((1 << (power)) + 1) )
 #define NUM_DISP_POWER_TRIS(power)	( (1 << (power)) * (1 << (power)) * 2 )
 
-#if defined(__EMSCRIPTEN__)
-// Browsers have a limited access to system memory specifically 512MB on x86 systems, (which is what we are targetting) and 1 Gigabyte for x64 systems (which we aren't targetting)
-#define BSP_USE_LESS_MEMORY
-#endif
-
 #if !defined( BSP_USE_LESS_MEMORY )
 // Common limits
 // leaffaces, leafbrushes, planes, and verts are still bounded by
