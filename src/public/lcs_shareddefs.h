@@ -8,3 +8,6 @@
 // Browsers have very little memory limits!
 #define BSP_USE_LESS_MEMORY 1
 #endif
+
+// Weapons
+#define WEAPON_WRENCH WEAPON_KNIFE

@@ -27,6 +27,7 @@ def build(bld):
 		'../shared/cstrike15',
 		'../shared/cstrike15/bot',
 		'../shared/econ',
+        '../../public',
 		'../../utils/common',
 		'../../gcsdk/steamextra',
 		'../../generated_proto',
@@ -38,7 +39,8 @@ def build(bld):
 		'../shared/achievementmgr.cpp',
 		'../shared/achievements_hlx.cpp',
 		'../shared/activitylist.cpp',
-		'ai_activity.cpp',
+		'../shared/lcs/weapon_pipewrench.cpp'
+        'ai_activity.cpp',
 		'ai_agent.cpp',
 		'ai_baseactor.cpp',
 		'ai_basehumanoid.cpp',

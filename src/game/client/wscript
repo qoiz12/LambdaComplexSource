@@ -30,6 +30,7 @@ def build(bld):
 		'../shared/cstrike15',
 		'../shared/cstrike15/control',
 		'../shared/econ',
+        '../../public',
 		'../../gcsdk/steamextra',
 		'../../generated_proto',
 		'../../thirdparty/protobuf-2.6.1/src'
@@ -41,7 +42,8 @@ def build(bld):
 		'history_resource.cpp',
 		'hud_weapon.cpp',
 		'train.cpp',
-		'../shared/achievement_saverestore.cpp',
+		'../shared/lcs/weapon_wrench.cpp'
+        '../shared/achievement_saverestore.cpp',
 		'../shared/achievementmgr.cpp',
 		'../shared/achievements_hlx.cpp',
 		'../shared/activitylist.cpp',
