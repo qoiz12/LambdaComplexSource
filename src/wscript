@@ -1,5 +1,5 @@
 #! /usr/bin/env python3
-# a1batross, mittorn, nn-firc
+# Mohamed Ashraf, a1batross, mittorn, nn-firc
 
 from waflib import Build, Configure, Context, Logs
 import os.path
@@ -24,6 +24,8 @@ PROJECTS = [
     'filesystem',
     'game/client',
     'game/server',
+    # 'hammer',
+    # 'hammer_launcher',
     'gcsdk',
     'generated_proto',
     'inputsystem',
