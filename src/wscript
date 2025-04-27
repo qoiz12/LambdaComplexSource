@@ -171,6 +171,8 @@ def configure(conf):
         opt_flags += ['-fcolor-diagnostics']
     if conf.env.COMPILER_CC == 'emcc':
         opt_flags += ['-fcolor-diagnostics']
+    # Easier to debug errors
+        opt_flags += ['-ferror-limit=1']
     elif conf.env.COMPILER_CC == 'gcc':
         opt_flags += ['-fdiagnostics-color=always']
 

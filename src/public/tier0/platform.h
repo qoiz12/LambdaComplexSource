@@ -11,6 +11,11 @@
 
 #pragma once
 
+#if defined( __EMSCRIPTEN__)
+#include <time.h>
+#include <emscripten/emscripten.h>
+#endif
+
 #if defined( LINUX ) && ((__GNUC__ * 100) + __GNUC_MINOR__) >= 406
 // based on some Jonathan Wakely macros on the net...
 #define GCC_DIAG_STR(s) #s
@@ -1715,8 +1720,8 @@ PLATFORM_INTERFACE void				Plat_GetLocalTime( struct tm *pNow );
 
 // Convert a time_t (specified in nTime - seconds since Jan 1, 1970 UTC) to a local calendar time in a threadsafe and non-crash-prone way.
 PLATFORM_INTERFACE void				Plat_ConvertToLocalTime( uint64 nTime, struct tm *pNow );
-// In Emscripten, it loves being a bitch, so we have to use std::.
-PLATFORM_INTERFACE struct tm *		Plat_localtime( const std::time_t *timep, struct tm *result );
+// In Emscripten, it loves being a bitch.
+PLATFORM_INTERFACE struct tm *		Plat_localtime( const time_t *timep, struct tm *result );
 
 // Get a time string (same as ascstring, but threadsafe).
 PLATFORM_INTERFACE void				Plat_GetTimeString( struct tm *pTime, char *pOut, int nMaxBytes );
@@ -1792,6 +1797,10 @@ inline uint64 Plat_Rdtsc()
 	uint32 lo, hi;
 	__asm__ __volatile__ ( "rdtsc" : "=a" (lo), "=d" (hi));
 	return ( ( ( uint64 )hi ) << 32 ) | lo;
+#elif defined( __EMSCRIPTEN__ )
+uint64 val {
+    return (uint64_t)(emscripten_get_now() * 1000.0); // microseconds
+};
 #else
 #error
 #endif
