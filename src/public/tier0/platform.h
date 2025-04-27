@@ -1715,7 +1715,8 @@ PLATFORM_INTERFACE void				Plat_GetLocalTime( struct tm *pNow );
 
 // Convert a time_t (specified in nTime - seconds since Jan 1, 1970 UTC) to a local calendar time in a threadsafe and non-crash-prone way.
 PLATFORM_INTERFACE void				Plat_ConvertToLocalTime( uint64 nTime, struct tm *pNow );
-PLATFORM_INTERFACE struct tm *		Plat_localtime( const time_t *timep, struct tm *result );
+// In Emscripten, it loves being a bitch, so we have to use std::.
+PLATFORM_INTERFACE struct tm *		Plat_localtime( const std::time_t *timep, struct tm *result );
 
 // Get a time string (same as ascstring, but threadsafe).
 PLATFORM_INTERFACE void				Plat_GetTimeString( struct tm *pTime, char *pOut, int nMaxBytes );

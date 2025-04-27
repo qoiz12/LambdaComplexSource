@@ -42,7 +42,7 @@ def build(bld):
 		'history_resource.cpp',
 		'hud_weapon.cpp',
 		'train.cpp',
-		'../shared/lcs/weapon_wrench.cpp'
+        '../shared/lcs/weapon_pipewrench.cpp',
         '../shared/achievement_saverestore.cpp',
 		'../shared/achievementmgr.cpp',
 		'../shared/achievements_hlx.cpp',
