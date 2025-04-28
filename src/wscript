@@ -319,7 +319,7 @@ int main(void) { return 0; }''',
     conf.add_subproject(PROJECTS)
 
 def build(bld):
-    if conf.env.GAME_DLL:
+    if bld.env.GAME_DLL:
         bld.add_subproject(PROJECTS_GAME_DLL)
     else:
         bld.add_subproject(PROJECTS)
