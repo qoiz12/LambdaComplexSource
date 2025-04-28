@@ -307,7 +307,7 @@ void CWrench::WeaponIdle()
 
 // [tj] Hacky cheat code to control knife damage
 #ifndef CLIENT_DLL
-	ConVar WrenchDamageScale( "knife_damage_scale", "100", FCVAR_DEVELOPMENTONLY );
+	ConVar WrenchDamageScale( "wrench_damage_scale", "130", FCVAR_DEVELOPMENTONLY );
 #endif
 
 
