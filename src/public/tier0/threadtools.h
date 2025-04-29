@@ -450,7 +450,7 @@ inline int64 ThreadInterlockedDecrement64( int64 volatile *p )
 
 
 #if defined(__EMSCRIPTEN__)
-inline int64_t ThreadInterlockedExchangeAdd64( int64_t volatile *p, int64_t value )
+inline int64_t ThreadInterlockedExchangeAdd( int64_t volatile *p, int64_t value )
 {
 	Assert( ( (size_t)p ) % 8 == 0 ); 
 	return __sync_fetch_and_add( p, value );
