@@ -392,12 +392,12 @@ PLATFORM_INTERFACE int32 ThreadInterlockedExchangeAdd( int32 volatile *, int32 v
 PLATFORM_INTERFACE int32 ThreadInterlockedCompareExchange( int32 volatile *, int32 value, int32 comperand ) NOINLINE;
 PLATFORM_INTERFACE bool ThreadInterlockedAssignIf( int32 volatile *, int32 value, int32 comperand ) NOINLINE;
 #else
-PLATFORM_INTERFACE int ThreadInterlockedIncrement( int volatile * ) NOINLINE;
-PLATFORM_INTERFACE int ThreadInterlockedDecrement( int volatile * ) NOINLINE;
-PLATFORM_INTERFACE int ThreadInterlockedExchange( int volatile *, int value ) NOINLINE;
-PLATFORM_INTERFACE int ThreadInterlockedExchangeAdd( int volatile *, int value ) NOINLINE;
-PLATFORM_INTERFACE int ThreadInterlockedCompareExchange( int volatile *, int value, int comperand ) NOINLINE;
-PLATFORM_INTERFACE bool ThreadInterlockedAssignIf( int volatile *, int value, int comperand ) NOINLINE;
+PLATFORM_INTERFACE int64_t ThreadInterlockedIncrement( int64_t volatile * ) NOINLINE;
+PLATFORM_INTERFACE int64_t ThreadInterlockedDecrement( int64_t volatile * ) NOINLINE;
+PLATFORM_INTERFACE int64_t ThreadInterlockedExchange( int64_t volatile *, int64_t value ) NOINLINE;
+PLATFORM_INTERFACE int64_t ThreadInterlockedExchangeAdd( int64_t volatile *, int64_t value ) NOINLINE;
+PLATFORM_INTERFACE int64_t ThreadInterlockedCompareExchange( int64_t volatile *, int64_t value, int64_t comperand ) NOINLINE;
+PLATFORM_INTERFACE bool ThreadInterlockedAssignIf( int64_t volatile *, int64_t value, int64_t comperand ) NOINLINE;
 #endif
 #endif
 
@@ -454,6 +454,13 @@ inline int64_t ThreadInterlockedExchangeAdd64( int64_t volatile *p, int64_t valu
 {
 	Assert( ( (size_t)p ) % 8 == 0 ); 
 	return __sync_fetch_and_add( p, value );
+}
+
+
+inline bool ThreadInterlockedAssignIf( int64_t volatile *p, int64_t value, int64_t comperand )
+{
+	Assert( (size_t)p % 4 == 0 );
+	return __sync_bool_compare_and_swap( p, comperand, value );
 }
 #endif
 
