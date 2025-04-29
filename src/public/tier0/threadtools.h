@@ -764,9 +764,11 @@ public:
 	bool operator!=( T rhs ) const	{ return ( m_value != rhs ); }
 
 	T operator++()					{
+#if !defined(__EMSCRIPTEN__)
 										if ( sizeof(T) == sizeof(int32_t) ) 
 											return (T)ThreadInterlockedIncrement( (int32_t *)&m_value );
 										else
+#endif
 #if defined(EMSCRIPTEN)
 											return (T)ThreadInterlockedIncrement( (int64_t *)&m_value );
 #else
@@ -776,20 +778,34 @@ public:
 	T operator++(int)				{ return operator++() - 1; }
 
 	T operator--()					{	
+	#if !defined(__EMSCRIPTEN__)
 										if ( sizeof(T) == sizeof(int32) )
 											return (T)ThreadInterlockedDecrement( (int32 *)&m_value );
 										else
+	#endif
+	#if defined(__EMSCRIPTEN__)
+											return (T)ThreadInterlockedDecrement( (int64_t *)&m_value );
+	#else
 											return (T)ThreadInterlockedDecrement64( (int64 *)&m_value );
-									}
+	#endif								
+	
+							}
 
 	T operator--(int)				{ return operator--() + 1; }
 
 	bool AssignIf( T conditionValue, T newValue )	
-									{ 
+									{
+	#if !defined(__EMSCRIPTEN__)	
 										if ( sizeof(T) == sizeof(int32) )
 											return ThreadInterlockedAssignIf( (int32 *)&m_value, (int32)newValue, (int32)conditionValue );
 										else
+	#endif
+	#if defined(__EMSCRIPTEN__)
+											return ThreadInterlockedAssignIf( (int64_t *)&m_value, (int64_t)newValue, (int64_t)conditionValue );
+	#else
+
 											return ThreadInterlockedAssignIf64( (int64 *)&m_value, (int64)newValue, (int64)conditionValue );
+	#endif	
 									}
 
 
@@ -803,17 +819,26 @@ public:
 
 	// Atomic add is like += except it returns the previous value as its return value
 	T AtomicAdd( T add )			{ 
+#if !defined(EMSCRIPTEN)
 										if ( sizeof(T) == sizeof(int32_t) )
 											return (T)ThreadInterlockedExchangeAdd( (int32_t *)&m_value, (int32)add );
 										else
-											return (T)ThreadInterlockedExchangeAdd( (int64_t *)&m_value, (int64)add );	
+#endif
+#if defined(EMSCRIPTEN)
+											return (T)ThreadInterlockedExchangeAdd( (int64_t *)&m_value, (int64_t)add );
+#else
+
+											return (T)ThreadInterlockedExchangeAdd64( (int64_t *)&m_value, (int64_t)add );
+#endif	
 						}
 
 
-	void operator+=( T add )		{ 
+	void operator+=( T add )		{
+#if !defined(_EMSCRIPTEN)	
 										if ( sizeof(T) == sizeof(int32) )
 											ThreadInterlockedExchangeAdd( (int32 *)&m_value, (int32)add );
 										else
+#endif
 #if defined(__EMSCRIPTEN__)
 											ThreadInterlockedExchangeAdd( (int64_t *)&m_value, (int64_t)add );					
 #else
