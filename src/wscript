@@ -11,29 +11,6 @@ default_prefix = os.path.abspath('../game')
 
 Context.Context.line_just = 60 # should fit for everything on 80x26
 
-
-PROJECTS_GAME_DLL = [
-    'engine',
-    'engine/voice_codecs/celt',
-    'filesystem',
-    'game/client',
-    'game/server',
-    # 'hammer',
-    # 'hammer_launcher',
-    'launcher_main',
-    'materialsystem',
-    'materialsystem/shaderapidx9',
-    'materialsystem/shaderlib',
-    'materialsystem/stdshaders',
-    'mathlib',
-    'thirdparty/celt-v0.11.3',
-    'tier0',
-    'tier1',
-    'tier2',
-    'tier3',
-    'vscript'#,
-]
-
 PROJECTS = [
     'appframework',
     'bitmap',
@@ -254,7 +231,7 @@ def configure(conf):
             conf.define('LINUX', True)
             conf.define('GNUC', True)
             conf.define('_DLL_EXT', '.so', quote=False)
-        if conf.env.DEST_OS == 'emscripten':
+        if conf.env.COMPILER_CC == 'emcc':
             conf.define('_EMSCRIPTEN', True)
             conf.define('EMSCRIPTEN', True)
             conf.define('GNUC', True)
