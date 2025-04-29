@@ -14,13 +14,6 @@
 #include "tier0/platform.h"
 #include "tier0/dbg.h"
 
-#if defined(_EMSCRIPTEN)
-#define ThreadInterlockedExchangeAdd64 ThreadInterlockedExchangeAdd
-// Fixes
-#undef int64
-#define int64 uint64
-#endif
-
 #if defined( POSIX ) && !defined( _PS3 ) && !defined( _X360 )
 #include <pthread.h>
 #include <errno.h>
@@ -297,7 +290,7 @@ PLATFORM_INTERFACE void ThreadSetAffinity( ThreadHandle_t hThread, int nAffinity
 #error Every platform needs to define ThreadMemoryBarrier to at least prevent compiler reordering
 #endif
 
-#if defined( _LINUX ) || defined( _OSX )
+#if defined( _LINUX ) && !defined(__EMSCRIPTEN__) /*|| defined( _OSX ) !defined(__EMSCRIPTEN__)*/
 #define USE_INTRINSIC_INTERLOCKED
 // linux implementation
 inline int32 ThreadInterlockedIncrement( int32 volatile *p )
@@ -323,11 +316,14 @@ inline int32 ThreadInterlockedExchangeAdd( int32 volatile *p, int32 value )
 	Assert( (size_t)p % 4 == 0 ); 
 	return __sync_fetch_and_add( p, value );
 }
-inline int64 ThreadInterlockedExchangeAdd64( int64 volatile *p, int64 value )
+
+// Can't I just make it  an int?
+inline int64_t ThreadInterlockedExchangeAdd64( int64_t volatile *p, int64_t value )
 {
 	Assert( ( (size_t)p ) % 8 == 0 ); 
 	return __sync_fetch_and_add( p, value );
 }
+
 inline int32 ThreadInterlockedCompareExchange( int32 volatile *p, int32 value, int32 comperand )
 {
 	Assert( (size_t)p % 4 == 0 ); 
@@ -387,13 +383,22 @@ FORCEINLINE int32 ThreadInterlockedExchangeAdd( int32 volatile *pDest, int32 val
 FORCEINLINE int32 ThreadInterlockedCompareExchange( int32 volatile *pDest, int32 value, int32 comperand )	{ Assert( (size_t)pDest % 4 == 0 ); return InterlockedCompareExchange( TO_INTERLOCK_PARAM(pDest), value, comperand ); }
 FORCEINLINE bool ThreadInterlockedAssignIf( int32 volatile *pDest, int32 value, int32 comperand )			{ Assert( (size_t)pDest % 4 == 0 ); return ( InterlockedCompareExchange( TO_INTERLOCK_PARAM(pDest), value, comperand ) == comperand ); }
 #else
-// non 32-bit windows and 360 implementation
+// non 32-bit windows, 360 implementation, and Emscripten
+#if !defined(EMSCRIPTEN)
 PLATFORM_INTERFACE int32 ThreadInterlockedIncrement( int32 volatile * ) NOINLINE;
 PLATFORM_INTERFACE int32 ThreadInterlockedDecrement( int32 volatile * ) NOINLINE;
 PLATFORM_INTERFACE int32 ThreadInterlockedExchange( int32 volatile *, int32 value ) NOINLINE;
 PLATFORM_INTERFACE int32 ThreadInterlockedExchangeAdd( int32 volatile *, int32 value ) NOINLINE;
 PLATFORM_INTERFACE int32 ThreadInterlockedCompareExchange( int32 volatile *, int32 value, int32 comperand ) NOINLINE;
 PLATFORM_INTERFACE bool ThreadInterlockedAssignIf( int32 volatile *, int32 value, int32 comperand ) NOINLINE;
+#else
+PLATFORM_INTERFACE int ThreadInterlockedIncrement( int volatile * ) NOINLINE;
+PLATFORM_INTERFACE int ThreadInterlockedDecrement( int volatile * ) NOINLINE;
+PLATFORM_INTERFACE int ThreadInterlockedExchange( int volatile *, int value ) NOINLINE;
+PLATFORM_INTERFACE int ThreadInterlockedExchangeAdd( int volatile *, int value ) NOINLINE;
+PLATFORM_INTERFACE int ThreadInterlockedCompareExchange( int volatile *, int value, int comperand ) NOINLINE;
+PLATFORM_INTERFACE bool ThreadInterlockedAssignIf( int volatile *, int value, int comperand ) NOINLINE;
+#endif
 #endif
 
 
@@ -441,6 +446,15 @@ inline int64 ThreadInterlockedDecrement64( int64 volatile *p )
 	return __sync_fetch_and_add( p, -1 ) - 1;
 }
 
+#endif
+
+
+#if defined(__EMSCRIPTEN__)
+inline int64_t ThreadInterlockedExchangeAdd64( int64_t volatile *p, int64_t value )
+{
+	Assert( ( (size_t)p ) % 8 == 0 ); 
+	return __sync_fetch_and_add( p, value );
+}
 #endif
 
 #ifdef COMPILER_MSVC64
@@ -764,14 +778,10 @@ public:
 
 	// Atomic add is like += except it returns the previous value as its return value
 	T AtomicAdd( T add )			{ 
-										if ( sizeof(T) == sizeof(int32) )
-											return (T)ThreadInterlockedExchangeAdd( (int32 *)&m_value, (int32)add );
+										if ( sizeof(T) == sizeof(int32_t) )
+											return (T)ThreadInterlockedExchangeAdd( (int32_t *)&m_value, (int32)add );
 										else
-										#ifndef __EMSCRIPTEN__
-											return (T)ThreadInterlockedExchangeAdd64( (int64 *)&m_value, (int64)add );
-										#else	
-											return(T)ThreadInterlockedExchangeAdd( (int64 *)&m_value, (int64)add );
-										#endif			
+											return (T)ThreadInterlockedExchangeAdd( (int64_t *)&m_value, (int64)add );	
 						}
 
 
