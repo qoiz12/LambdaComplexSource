@@ -16,6 +16,9 @@
 
 #if defined(_EMSCRIPTEN)
 #define ThreadInterlockedExchangeAdd64 ThreadInterlockedExchangeAdd
+// Fixes
+#undef int64
+#define int64 uint64
 #endif
 
 #if defined( POSIX ) && !defined( _PS3 ) && !defined( _X360 )
@@ -879,21 +882,36 @@ public:
 	bool operator==( T *rhs ) const	{ return ( m_value == rhs ); }
 	bool operator!=( T *rhs ) const	{ return ( m_value != rhs ); }
 
+#ifndef EMSCRIPTEN
 	T *operator++()					{ return ((T *)THREADINTERLOCKEDEXCHANGEADD( (int32 *)&m_value, sizeof(T) )) + 1; }
 	T *operator++(int)				{ return (T *)THREADINTERLOCKEDEXCHANGEADD( (int32 *)&m_value, sizeof(T) ); }
 
 	T *operator--()					{ return ((T *)THREADINTERLOCKEDEXCHANGEADD( (int32 *)&m_value, -sizeof(T) )) - 1; }
 	T *operator--(int)				{ return (T *)THREADINTERLOCKEDEXCHANGEADD( (int32 *)&m_value, -sizeof(T) ); }
+#else
+	T *operator++()					{ return ((T *)THREADINTERLOCKEDEXCHANGEADD( (int64 *)&m_value, sizeof(T) )) + 1; }
+	T *operator++(int)				{ return (T *)THREADINTERLOCKEDEXCHANGEADD( (int64 *)&m_value, sizeof(T) ); }
+
+	T *operator--()					{ return ((T *)THREADINTERLOCKEDEXCHANGEADD( (int64 *)&m_value, -sizeof(T) )) - 1; }
+	T *operator--(int)				{ return (T *)THREADINTERLOCKEDEXCHANGEADD( (int64 *)&m_value, -sizeof(T) ); }
+#endif
 
 	bool AssignIf( T *conditionValue, T *newValue )	{ return ThreadInterlockedAssignPointerToConstIf( (void const **) &m_value, (void const *) newValue, (void const *) conditionValue ); }
 
 	T *operator=( T *newValue )		{ ThreadInterlockedExchangePointerToConst( (void const **) &m_value, (void const *) newValue ); return newValue; }
-
+#if !defined(EMSCRIPTEN)
 	void operator+=( int add )		{ THREADINTERLOCKEDEXCHANGEADD( (int32 *)&m_value, add * sizeof(T) ); }
+#else
+	void operator+=( int add )		{ THREADINTERLOCKEDEXCHANGEADD( (int64 *)&m_value, add * sizeof(T) ); }
+#endif
 	void operator-=( int subtract )	{ operator+=( -subtract ); }
 
 	// Atomic add is like += except it returns the previous value as its return value
+#ifndef EMSCRIPTEN
 	T *AtomicAdd( int add ) { return ( T * ) THREADINTERLOCKEDEXCHANGEADD( (int32 *)&m_value, add * sizeof(T) ); }
+#else
+	T* AtomicAdd( int add ) { return ( T * ) THREADINTERLOCKEDEXCHANGEADD( (int64 *)&m_value, add * sizeof(T) ); }
+#endif
 
 	T *operator+( int rhs ) const		{ return m_value + rhs; }
 	T *operator-( int rhs ) const		{ return m_value - rhs; }
