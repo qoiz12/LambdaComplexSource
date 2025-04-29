@@ -14,6 +14,10 @@
 #include "tier0/platform.h"
 #include "tier0/dbg.h"
 
+#if defined(_EMSCRIPTEN)
+#define ThreadInterlockedExchangeAdd64 ThreadInterlockedExchangeAdd
+#endif
+
 #if defined( POSIX ) && !defined( _PS3 ) && !defined( _X360 )
 #include <pthread.h>
 #include <errno.h>
@@ -760,8 +764,12 @@ public:
 										if ( sizeof(T) == sizeof(int32) )
 											return (T)ThreadInterlockedExchangeAdd( (int32 *)&m_value, (int32)add );
 										else
+										#ifndef __EMSCRIPTEN__
 											return (T)ThreadInterlockedExchangeAdd64( (int64 *)&m_value, (int64)add );
-									}
+										#else	
+											return(T)ThreadInterlockedExchangeAdd( (int64 *)&m_value, (int64)add );
+										#endif			
+						}
 
 
 	void operator+=( T add )		{ 

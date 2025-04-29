@@ -77,6 +77,12 @@
   #define __RADDETECTED__ __RADLINUX__
 #endif
 
+#if defined(EMSCRIPTEN)
+	// Try to emulate Linux
+	#define __RADEMSCRIPTEN__ 3 
+	#define __RADDETECTED__ __RADEMSCRIPTEN__
+#endif
+
 #if defined(__native_client__)
   #define __RADNACL__ 4
   #define __RADDETECTED__ __RADNACL__
@@ -185,7 +191,7 @@
   #define __RADDETECTEDPROC__ __RADX86__
   #define __RADLITTLEENDIAN__
 #endif
-#if defined(_x86_64) || defined( __x86_64__ ) || defined( _M_X64 ) || defined( _M_AMD64 )
+#if defined(_x86_64) || defined( __x86_64__ ) || defined( _M_X64 ) || defined( _M_AMD64 ) || defined( __EMSCRIPTEN__ )
   #define __RADX86__ 2
   #define __RADX64__ 3
   #define __RADMMX__
@@ -286,6 +292,15 @@
   //   so for RADEXPFUNC, we turn the vis back on...
   #define RADDLLEXPORTDLL __attribute__((visibility("default")))
   #define RADDLLIMPORTDLL
+#endif
+
+#if defined( __RADEMSCRIPTEN__ )
+	#define RADRESTRICT __restrict
+	#define RADSTRUCT struct __attribute__((__packed__)
+	#define RADLINK
+	#define RADEXPLINK
+	#define RADDLLEXPORTDLL __attribute__((__packed__)
+	#define RADDLLIMPORTDLL
 #endif
 
 #if defined(__RADNACL__)

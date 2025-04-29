@@ -1798,9 +1798,11 @@ inline uint64 Plat_Rdtsc()
 	__asm__ __volatile__ ( "rdtsc" : "=a" (lo), "=d" (hi));
 	return ( ( ( uint64 )hi ) << 32 ) | lo;
 #elif defined( __EMSCRIPTEN__ )
-uint64 val {
-    return (uint64_t)(emscripten_get_now() * 1000.0); // microseconds
-};
+// TODO: Recreate the rdtsc loader func to Emscripten
+//uint64 val {
+//    return emscripten_get_now * 1000.0(); // microseconds
+//};
+uint64 val;
 #else
 #error
 #endif
