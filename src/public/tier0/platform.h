@@ -14,6 +14,9 @@
 #if defined( __EMSCRIPTEN__)
 #include <time.h>
 #include <emscripten/emscripten.h>
+// Missing a bunch of std shit.
+#include <stdio.h>
+#include <stdarg.h>
 #endif
 
 #if defined( LINUX ) && ((__GNUC__ * 100) + __GNUC_MINOR__) >= 406
