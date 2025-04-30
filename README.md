@@ -38,6 +38,10 @@ Yes I could, if you do want this feature implemented, either join the Discord, o
 
 #### Hey somebody plagirized your code, what can I do to help?
 You can report their repository or if they have Discord, send me the link to it, and I will negotiate with the owner. Do not raid any servers, since these could just be kids.
+
+#### What compiles on Emscripten?
+Currently, tier1, tier2, and tier0 works on Emscripten (They compile), but currently, this is a work-in-progress, meaning that Emscripten isn't **FULLY** completed.
+
 ## Features
 
 - **Native Emscripten Support**
