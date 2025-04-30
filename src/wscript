@@ -256,6 +256,8 @@ def configure(conf):
     conf.define('CSTRIKE_REL_BUILD', True)
     conf.define('VPROF_LEVEL', True)
     conf.define('RAD_TELEMETRY_DISABLED', True)
+    # The Source Engine lacks this feature, and this was never really used ever.
+    conf.define('IRONSIGHT_ENABLE', True)
 
     if conf.env.DEST_OS != 'win32':
         conf.define('DX_TO_VK_ABSTRACTION', True)
