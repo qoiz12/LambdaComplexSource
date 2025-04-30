@@ -11,7 +11,8 @@
 
 // Emscripten doesn't support DirectX, neither FORCEINLINE, so we need to stub FORCEINLINE.
 #if defined(EMSCRIPTEN)
-#define FORCEINLINE
+#define FORCEINLINE inline
+#include "../emscripten/sse2_def.h"
 // It doesn't support VectorCall either.
 #if defined(VECTORCALL)
 #undef VECTORCALL
@@ -88,10 +89,11 @@ enum MatrixAxisType_t
 
 #if defined( __aarch64__ )
 #include <sse2neon.h>
-#else
+#endif
 #ifndef EMSCRIPTEN
 #include <xmmintrin.h>
-#else
+#endif
+#if defined EMSCRIPTEN
 #include <wasm_simd128.h>
 #endif
 
@@ -100,6 +102,7 @@ enum MatrixAxisType_t
 
 // The following are not declared as macros because they are often used in limiting situations,
 // and sometimes the compiler simply refuses to inline them for some reason
+#if !defined(EMSCRIPTEN)
 FORCEINLINE float VECTORCALL FastSqrt( float x )
 {
 	__m128 root = _mm_sqrt_ss( _mm_load_ss( &x ) );
@@ -120,13 +123,43 @@ FORCEINLINE float VECTORCALL FastRSqrt( float x )
 	float rroot = FastRSqrtFast( x );
 	return (0.5f * rroot) * (3.f - (x * rroot) * rroot);
 }
+#endif
 
+#if defined(EMSCRIPTEN)
+inline float FastSqrt( float x )
+{
+	__m128 root = _mm_sqrt_ss( _mm_load_ss( &x ) );
+	return *( reinterpret_cast<float *>( &root ) );
+}
+
+inline float FastRSqrtFast( float x )
+{
+	// use intrinsics
+	__m128 rroot = _mm_rsqrt_ss( _mm_load_ss( &x ) );
+	return *( reinterpret_cast<float *>( &rroot ) );
+}
+// Single iteration NewtonRaphson reciprocal square root:
+// 0.5 * rsqrtps * (3 - x * rsqrtps(x) * rsqrtps(x)) 	
+// Very low error, and fine to use in place of 1.f / sqrtf(x).	
+inline float FastRSqrt( float x )
+{
+	float rroot = FastRSqrtFast( x );
+	return (0.5f * rroot) * (3.f - (x * rroot) * rroot);
+}
+#endif
+
+//#ifndef EMSCRIPTEN
 #include "../../thirdparty/DirectXMath-dec2023/Inc/DirectXMath.h"
+//#endif
 
+#if !defined(EMSCRIPTEN)
 FORCEINLINE void FastSinCos( float x, float* s, float* c ) { DirectX::XMScalarSinCosEst( s, c, x ); }
 FORCEINLINE float FastCos( float x ) { return DirectX::XMScalarCosEst( x ); }
-
-
+#endif
+#if defined(EMSCRIPTEN)
+inline void FastSinCos( float x, float* s, float* c ) { DirectX::XMScalarSinCosEst( s, c, x ); }
+inline float FastCos( float x ) { return DirectX::XMScalarCosEst( x ); }
+#endif
 
 inline float FastRecip(float x) {return 1.0f / x;}
 // Simple SSE rsqrt.  Usually accurate to around 6 (relative) decimal places 

@@ -89,7 +89,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 class CLoggingSystem;
-class CThreadFastMutex;
+
+extern class CThreadFastMutex;
 
 //-----------------------------------------------------------------------------
 // Maximum length of a sprintf'ed logging message.

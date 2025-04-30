@@ -13,6 +13,9 @@
 #error DirectX Math requires C++
 #endif
 
+#if defined(EMSCRIPTEN)
+#include <wasm_simd128.h>
+#endif
 #define DIRECTX_MATH_VERSION 318
 
 #if defined(_MSC_VER) && (_MSC_VER < 1910)
@@ -86,7 +89,7 @@
 #elif defined(_M_ARM) || defined(_M_ARM64) || defined(_M_HYBRID_X86_ARM64) || defined(_M_ARM64EC) || __arm__ || __aarch64__
 #define _XM_ARM_NEON_INTRINSICS_
 #elif defined(__EMSCRIPTEN__)
-#define _XM_SSE_INTRINSICS_
+#define _XM_NO_INTRINSICS_
 #endif
 #elif !defined(_XM_NO_INTRINSICS_)
 #error DirectX Math does not support this target
