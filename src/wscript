@@ -154,9 +154,12 @@ def configure(conf):
         conf.env.append_unique('CFLAGS_cshlib', ['-fPIC'])
         conf.env.append_unique('CXXFLAGS_cxxshlib', ['-fPIC'])
 
-#   if conf.env.COMPILER_CC not in ['emcc']:
-#       conf.check_cc(cflags=cflags, linkflags=linkflags, msg='Checking for required C flags')
-#        conf.check_cxx(cxxflags=cxxflags, linkflags=linkflags, msg='Checking for required C++ flags')
+    if conf.env.COMPILER_CC in ['emcc']:
+        conf.env.append_value('LINKFLAGS', ['-sWASM=1'])
+        conf.env.append_value('CXXFLAGS', ['-msse'])
+        conf.env.append_value('CXXFLAGS', ['-msse2'])
+        conf.env.append_value('CXXFLAGS', ['-msimd128'])
+        conf.env.append_value('CXXFLAGS', ['-Wno-unused-command-line-argument'])
 
     conf.env.append_unique('CFLAGS', cflags)
     conf.env.append_unique('CXXFLAGS', cxxflags)
@@ -175,8 +178,6 @@ def configure(conf):
         opt_flags += ['-fcolor-diagnostics']
     # Easier to debug errors
         opt_flags += ['-ferror-limit=1']
-        opt_flags += ['-s WASM=1']
-        opt_flags += ['-msimd128']
     elif conf.env.COMPILER_CC == 'gcc':
         opt_flags += ['-fdiagnostics-color=always']
 

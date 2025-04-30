@@ -11,6 +11,7 @@
 #elif defined ( _PS3 )
 #include <vectormath/c/vectormath_aos.h>
 #include <vectormath/c/vectormath_aos_v.h>
+#if !defined(EMSCRIPTEN)
 #elif defined( __aarch64__ )
 #include <sse2neon.h>
 #else
@@ -18,6 +19,11 @@
 #ifndef _LINUX
 #include <emmintrin.h>
 #endif
+#endif
+#else
+#include <wasm_simd128.h>
+#include <xmmintrin.h>
+#include <emmintrin.h>
 #endif
 
 #ifndef SPU
