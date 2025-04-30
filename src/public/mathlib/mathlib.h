@@ -16,7 +16,7 @@
 #include "mathlib/fltx4.h"
 
 #if defined(EMSCRIPTEN)
-int qboolean;
+typedef int qboolean;
 #endif
 
 #ifndef ALIGN8_POST
@@ -474,7 +474,7 @@ inline float CrossProductZ( const Vector & v1, const Vector& v2 )
 	return v1.x * v2.y - v1.y * v2.x;
 }
 
-qboolean VectorsEqual( const float *v1, const float *v2 );
+int VectorsEqual( const float *v1, const float *v2 );
 
 inline vec_t RoundInt (vec_t in)
 {
@@ -1604,13 +1604,17 @@ FORCEINLINE int RoundFloatToInt(float f)
 #endif
 #else // !X360
 	int nResult;
+//#if defined(EMSCRIPTEN)
+//#undef GNUC
+//#endif
+
 #if defined( COMPILER_MSVC32 )
 	__asm
 	{
 		fld f
 		fistp nResult
 	}
-#elif GNUC && !defined( __aarch64__ )
+#elif GNUC && !defined( __EMSCRIPTEN__ )
 	__asm __volatile__ (
 		"fistpl %0;": "=m" (nResult): "t" (f) : "st"
 	);
@@ -1619,6 +1623,10 @@ FORCEINLINE int RoundFloatToInt(float f)
 #endif
 	return nResult;
 #endif
+
+//#ifdef EMSCRIPTEN
+//#define GNUC 1
+//#endif
 }
 
 FORCEINLINE unsigned char RoundFloatToByte(float f)

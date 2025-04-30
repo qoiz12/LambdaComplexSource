@@ -1185,10 +1185,18 @@ public:
 	bool AssertOwnedByCurrentThread()	{ return true; }
 	void SetTrace( bool )				{}
 
+#if !defined(EMSCRIPTEN)
 	uint32 GetOwnerId() const			{ return m_ownerID;	}
+#else
+	uint64_t GetOwnerId() const			{return m_ownerID;	}
+#endif
 	int	GetDepth() const				{ return m_depth; }
 private:
+#if !defined(EMSCRIPTEN)
 	volatile uint32 m_ownerID;
+#else
+	volatile uint64_t m_ownerID;
+#endif
 	int				m_depth;
 };
 
@@ -2557,12 +2565,21 @@ FORCEINLINE bool CThreadSpinRWLock::TryLockForRead()
 		oldValue.m_i32 = ( curValue.m_i32 & 0xffff );
 		newValue.m_i32 = oldValue.m_i32 + 1;
 
+	#if !defined(EMSCRIPTEN)
 		if ( ThreadInterlockedAssignIf( &m_lockInfo.m_i32, newValue.m_i32, oldValue.m_i32 ) )
 		{
 			ThreadMemoryBarrier();
 			RWLAssert( m_lockInfo.m_fWriting == 0 );
 			return true;
 		}
+	#else
+		if ( ThreadInterlockedAssignIf( &m_lockInfo.m_i64, newValue.m_i64, oldValue.m_i64 ) )
+		{
+			ThreadMemoryBarrier();
+			RWLAssert( m_lockInfo.m_fWriting == 0 );
+			return true;
+		}
+	#endif
 	}
 	return false;
 }
@@ -2618,7 +2635,7 @@ void CThreadSpinRWLock::UnlockRead()
 #endif
 	{
 		ThreadMemoryBarrier();
-		ThreadInterlockedDecrement( &m_lockInfo.m_i32 );
+		ThreadInterlockedDecrement( &m_lockInfo.m_i64 );
 		RWLAssert( m_writerId == 0 && !m_lockInfo.m_fWriting );
 	}
 #ifdef REENTRANT_THREAD_SPIN_RW_LOCK
