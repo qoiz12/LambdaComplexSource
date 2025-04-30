@@ -40,6 +40,8 @@ def build(bld):
 		'../shared/achievements_hlx.cpp',
 		'../shared/activitylist.cpp',
 		'../shared/lcs/weapon_pipewrench.cpp',
+        '../shared/lcs/weapon_snark.cpp',
+        'lcs/npc_snark.cpp',
         'ai_activity.cpp',
 		'ai_agent.cpp',
 		'ai_baseactor.cpp',

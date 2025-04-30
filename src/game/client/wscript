@@ -43,6 +43,7 @@ def build(bld):
 		'hud_weapon.cpp',
 		'train.cpp',
         '../shared/lcs/weapon_pipewrench.cpp',
+        '../shared/lcs/weapon_snark.cpp'
         '../shared/achievement_saverestore.cpp',
 		'../shared/achievementmgr.cpp',
 		'../shared/achievements_hlx.cpp',
