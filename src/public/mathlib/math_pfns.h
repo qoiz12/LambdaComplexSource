@@ -9,6 +9,16 @@
 
 #include <limits>
 
+// Emscripten doesn't support DirectX, neither FORCEINLINE, so we need to stub FORCEINLINE.
+#if defined(EMSCRIPTEN)
+#define FORCEINLINE
+// It doesn't support VectorCall either.
+#if defined(VECTORCALL)
+#undef VECTORCALL
+#define VECTORCALL
+#endif
+#endif
+
 // YUP_ACTIVE is from Source2. It's (obviously) not supported on this branch, just including it here to help merge camera.cpp/.h and the CSM shadow code.
 //#define YUP_ACTIVE 1
 
@@ -79,7 +89,10 @@ enum MatrixAxisType_t
 #if defined( __aarch64__ )
 #include <sse2neon.h>
 #else
+#ifndef EMSCRIPTEN
 #include <xmmintrin.h>
+#else
+#include <wasm_simd128.h>
 #endif
 
 

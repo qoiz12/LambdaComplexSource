@@ -22,8 +22,8 @@
 #endif
 #else
 #include <wasm_simd128.h>
-#include <xmmintrin.h>
-#include <emmintrin.h>
+//#include <xmmintrin.h>
+//#include <emmintrin.h>
 #endif
 
 #ifndef SPU

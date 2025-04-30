@@ -30,7 +30,10 @@
 #include <sse2neon.h>
 #elif !defined( PLATFORM_PPC ) // we want our linux with xmm support
 // For MMX intrinsics
+#ifndef EMSCRIPTEN
 #include <xmmintrin.h>
+#else
+#include <wasm_simd128.h>
 #endif
 
 #ifndef ALIGN16_POST

@@ -156,10 +156,10 @@ def configure(conf):
 
     if conf.env.COMPILER_CC in ['emcc']:
         conf.env.append_value('LINKFLAGS', ['-sWASM=1'])
-        conf.env.append_value('CXXFLAGS', ['-msse'])
-        conf.env.append_value('CXXFLAGS', ['-msse2'])
-        conf.env.append_value('CXXFLAGS', ['-msimd128'])
         conf.env.append_value('CXXFLAGS', ['-Wno-unused-command-line-argument'])
+        conf.env.append_value('CXXFLAGS', ['-msimd128'])
+        conf.env.append_value('LINKFLAGS', ['-msimd128'])
+
 
     conf.env.append_unique('CFLAGS', cflags)
     conf.env.append_unique('CXXFLAGS', cxxflags)
@@ -219,6 +219,10 @@ def configure(conf):
             conf.define('COMPILER_MSVC32', True)
     elif conf.env.COMPILER_CC in ['gcc', 'clang']:
         conf.define('COMPILER_GCC', True)
+
+#    if conf.env.COMPILER_CC == 'emcc':
+#        conf.define('__SSE__', True)
+#        conf.define('__SSE2__', True)
 
     if conf.env.DEST_OS == 'win32': # TODO: IMPLETE ME!
         conf.define('_WIN32', True)
