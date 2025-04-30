@@ -2635,7 +2635,11 @@ void CThreadSpinRWLock::UnlockRead()
 #endif
 	{
 		ThreadMemoryBarrier();
+#if defined(EMSCRIPTEN)
 		ThreadInterlockedDecrement( &m_lockInfo.m_i64 );
+#else
+		ThreadInterlockedDecrement( &m_lockInfo.m_i32 );
+#endif
 		RWLAssert( m_writerId == 0 && !m_lockInfo.m_fWriting );
 	}
 #ifdef REENTRANT_THREAD_SPIN_RW_LOCK

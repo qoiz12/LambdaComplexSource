@@ -90,8 +90,9 @@
 
 class CLoggingSystem;
 
-extern class CThreadFastMutex;
-
+#ifndef EMSCRIPTEN
+class CThreadFastMutex;
+#endif
 //-----------------------------------------------------------------------------
 // Maximum length of a sprintf'ed logging message.
 //-----------------------------------------------------------------------------
