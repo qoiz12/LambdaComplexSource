@@ -46,6 +46,7 @@ typedef const fltx4 & FLTX4;
 // A 16-byte aligned int32 datastructure
 // (for use when writing out fltx4's as SIGNED
 // ints).
+#ifndef EMSCRIPTEN
 struct ALIGN16 intx4
 {
 	int32 m_i32[4];
@@ -77,7 +78,39 @@ struct ALIGN16 intx4
 			m_i32[3] == other.m_i32[3] 	;
 	}
 } ALIGN16_POST;
+#else
+struct ALIGN16 intx4
+{
+	int64_t m_i64[4];
 
+	inline int & operator[](int which) 
+	{
+		return m_i64[which];
+	}
+
+	inline const int & operator[](int which) const
+	{
+		return m_i64[which];
+	}
+
+	inline int64_t *Base() {
+		return m_i64;
+	}
+
+	inline const int64_t *Base() const
+	{
+		return m_i64;
+	}
+
+	inline bool operator==(const intx4 &other) const
+	{
+		return m_i64[0] == other.m_i64[0] &&
+			m_i64[1] == other.m_i64[1] &&
+			m_i64[2] == other.m_i64[2] &&
+			m_i64[3] == other.m_i64[3] 	;
+	}
+} ALIGN16_POST;
+#endif
 
 #if defined( _DEBUG ) && defined( _X360 )
 FORCEINLINE void TestVPUFlags()

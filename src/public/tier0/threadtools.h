@@ -834,7 +834,7 @@ public:
 
 
 	void operator+=( T add )		{
-#if !defined(_EMSCRIPTEN)	
+#if !defined(EMSCRIPTEN)	
 										if ( sizeof(T) == sizeof(int32) )
 											ThreadInterlockedExchangeAdd( (int32 *)&m_value, (int32)add );
 										else
@@ -957,10 +957,10 @@ public:
 	T *operator--(int)				{ return (T *)THREADINTERLOCKEDEXCHANGEADD( (int32 *)&m_value, -sizeof(T) ); }
 #else
 	T *operator++()					{ return ((T *)THREADINTERLOCKEDEXCHANGEADD( (int64_t *)&m_value, sizeof(T) )) + 1; }
-	T *operator++(int64_t)				{ return (T *)THREADINTERLOCKEDEXCHANGEADD( (int64_t *)&m_value, sizeof(T) ); }
+	T *operator++(int)				{ return (T *)THREADINTERLOCKEDEXCHANGEADD( (int64_t *)&m_value, sizeof(T) ); }
 
 	T *operator--()					{ return ((T *)THREADINTERLOCKEDEXCHANGEADD( (int64_t *)&m_value, -sizeof(T) )) - 1; }
-	T *operator--(int64_t)				{ return (T *)THREADINTERLOCKEDEXCHANGEADD( (int64_t *)&m_value, -sizeof(T) ); }
+	T *operator--(int)				{ return (T *)THREADINTERLOCKEDEXCHANGEADD( (int64_t *)&m_value, -sizeof(T) ); }
 #endif
 
 	bool AssignIf( T *conditionValue, T *newValue )	{ return ThreadInterlockedAssignPointerToConstIf( (void const **) &m_value, (void const *) newValue, (void const *) conditionValue ); }
@@ -1096,9 +1096,13 @@ public:
 private:
 	FORCEINLINE bool TryLockInline( const uint32 threadId ) volatile
 	{
+#if !defined(__EMSCRIPTEN__)
 		if ( threadId != m_ownerID && !ThreadInterlockedAssignIf( (volatile int32 *)&m_ownerID, (int32)threadId, 0 ) )
 			return false;
-
+#else
+		if ( threadId != m_ownerID && !ThreadInterlockedAssignIf( (volatile int64_t *)&m_ownerID, (int64_t)threadId, 0 ) )
+			return false;
+#endif
 		ThreadMemoryBarrier();
 		m_depth = m_depth + 1;
 		return true;
@@ -2485,12 +2489,21 @@ inline bool CThreadSpinRWLock::IsLockedForRead()
 
 FORCEINLINE bool CThreadSpinRWLock::TryLockForWrite()
 {
+#ifndef EMSCRIPTEN
 	volatile LockInfo_t &curValue = m_lockInfo;
 	if ( !( curValue.m_i32 & 0x00010000 ) && ThreadInterlockedAssignIf( &curValue.m_i32, 0x00010000, 0  ) ) 
 	{
 		ThreadMemoryBarrier();
 		RWLAssert( m_iWriteDepth == 0 && m_writerId == 0 );
 		m_writerId = ThreadGetCurrentId();
+#else
+	volatile LockInfo_t &curValue = m_lockInfo;
+	if ( !( curValue.m_i64 & 0x00010000 ) && ThreadInterlockedAssignIf( &curValue.m_i64, 0x00010000, 0  ) ) 
+	{
+		ThreadMemoryBarrier();
+		RWLAssert( m_iWriteDepth == 0 && m_writerId == 0 );
+		m_writerId = ThreadGetCurrentId();
+#endif
 #ifdef REENTRANT_THREAD_SPIN_RW_LOCK
 		m_iWriteDepth++;
 #endif
