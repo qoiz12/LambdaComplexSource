@@ -176,7 +176,7 @@ def configure(conf):
     # Easier to debug errors
         opt_flags += ['-ferror-limit=1']
         opt_flags += ['-s WASM=1']
-        #opt_flags += ['-s MODULARIZE=1']
+        opt_flags += ['-msimd128']
     elif conf.env.COMPILER_CC == 'gcc':
         opt_flags += ['-fdiagnostics-color=always']
 

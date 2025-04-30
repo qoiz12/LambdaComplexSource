@@ -14,6 +14,10 @@
 #include "tier0/platform.h"
 #include "tier0/dbg.h"
 
+#if defined(EMSCRIPTEN)
+#include "../mathlib/ssemath.h"
+#endif
+
 #if defined( POSIX ) && !defined( _PS3 ) && !defined( _X360 )
 #include <pthread.h>
 #include <errno.h>
