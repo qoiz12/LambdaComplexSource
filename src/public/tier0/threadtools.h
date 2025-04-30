@@ -1809,6 +1809,9 @@ private:
 #endif
 		};
 		uint32 m_i32;
+#if defined(EMSCRIPTEN)
+		uint64_t m_i64;
+#endif
 	};
 
 	LockInfo_t	m_lockInfo;

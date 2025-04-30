@@ -9,9 +9,9 @@
 #ifndef VECTOR_H
 #define VECTOR_H
 
-#ifdef _WIN32
+//#ifdef _WIN32
 #pragma once
-#endif
+//#endif
 
 #include <math.h>
 #include <float.h>
@@ -34,6 +34,7 @@
 #include <xmmintrin.h>
 #else
 #include <wasm_simd128.h>
+#endif
 #endif
 
 #ifndef ALIGN16_POST

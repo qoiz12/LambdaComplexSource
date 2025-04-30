@@ -15,6 +15,10 @@
 #include "mathlib/math_pfns.h"
 #include "mathlib/fltx4.h"
 
+#if defined(EMSCRIPTEN)
+int qboolean;
+#endif
+
 #ifndef ALIGN8_POST
 #define ALIGN8_POST
 #endif

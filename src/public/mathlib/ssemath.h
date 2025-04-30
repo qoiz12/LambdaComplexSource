@@ -22,6 +22,7 @@
 #endif
 #else
 #include <wasm_simd128.h>
+#include "../emscripten/sse_def.h"
 //#include <xmmintrin.h>
 //#include <emmintrin.h>
 #endif
@@ -87,7 +88,7 @@ struct ALIGN16 intx4
 #else
 struct ALIGN16 intx4
 {
-	int64 m_i64[4];
+	int64_t m_i64[4];
 
 	inline int & operator[](int which) 
 	{
