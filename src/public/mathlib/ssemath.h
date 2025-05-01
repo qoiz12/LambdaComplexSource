@@ -90,7 +90,7 @@ struct ALIGN16 intx4
 {
 	int64_t m_i64[4];
 
-	inline int & operator[](int which) 
+	inline int & operator[](int64_t which) 
 	{
 		return m_i64[which];
 	}
