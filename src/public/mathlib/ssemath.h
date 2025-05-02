@@ -88,14 +88,14 @@ struct ALIGN16 intx4
 #else
 struct ALIGN16 intx4
 {
-	int64_t m_i64[4];
+	int64_t m_i64[1];
 
 	inline int & operator[](int64_t which) 
 	{
 		return m_i64[which];
 	}
 
-	inline const int & operator[](int which) const
+	inline const int & operator[](int64_t which) const
 	{
 		return m_i64[which];
 	}
@@ -4415,14 +4415,16 @@ FORCEINLINE void ConvertStoreAsIntsSIMD(intx4 * RESTRICT pDest, const fltx4 &vSr
 	(*pDest)[1] = (int)SubFloat(vSrc, 1);
 	(*pDest)[2] = (int)SubFloat(vSrc, 2);
 	(*pDest)[3] = (int)SubFloat(vSrc, 3);
-#else
+#elif !defined(__EMSCRIPTEN__)
 	__m64 bottom = _mm_cvttps_pi32( vSrc );
 	__m64 top    = _mm_cvttps_pi32( _mm_movehl_ps(vSrc,vSrc) );
 
 	*reinterpret_cast<__m64 *>(&(*pDest)[0]) = bottom;
 	*reinterpret_cast<__m64 *>(&(*pDest)[2]) = top;
-
 	_mm_empty();
+#else
+	__m128i intVals = _mm_cvttps_epi32(vSrc);
+  	 _mm_storeu_si128(reinterpret_cast<__m128i*>(pDest), intVals);
 #endif
 }
 
