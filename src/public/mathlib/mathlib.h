@@ -1665,12 +1665,18 @@ FORCEINLINE unsigned char RoundFloatToByte(float f)
 		fld f
 		fistp nResult
 	}
-#elif __LINUX__
+#elif GNUC
+// TODO: Convert to Emscripten
+//#if defined(__EMSCRIPTEN__)
+//	double f = 3.14159;
+//	nResult = static_cast<unsigned int> (f) & 0xff;
+//#endif	
+
+#if !defined(__EMSCRIPTEN__)
 	__asm __volatile__ (
 		"fistpl %0;": "=m" (nResult): "t" (f) : "st"
 	);
-#else
-	nResult = static_cast<unsigned int> (f) & 0xff;
+#endif
 #endif
 
 #ifdef Assert
@@ -1712,7 +1718,7 @@ FORCEINLINE unsigned long RoundFloatToUnsignedLong(float f)
 		fistp       qword ptr nResult
 	}
 	return *((unsigned long*)nResult);
-#elif defined( COMPILER_GCC ) && !defined( __aarch64__ )
+#elif defined( COMPILER_GCC ) && !defined( __EMSCRIPTEN__ )
 	unsigned char nResult[8];
 	__asm __volatile__ (
 		"fistpl %0;": "=m" (nResult): "t" (f) : "st"

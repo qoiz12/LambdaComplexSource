@@ -88,9 +88,9 @@ struct ALIGN16 intx4
 #else
 struct ALIGN16 intx4
 {
-	int64_t m_i64[1];
+	int64_t m_i64[4];
 
-	inline int & operator[](int64_t which) 
+	inline int64_t& operator[](int64_t which) 
 	{
 		return m_i64[which];
 	}

@@ -1112,13 +1112,22 @@ private:
 		return true;
 	}
 
+#if !defined(__EMSCRIPTEN__)
 	bool TryLock( const uint32 threadId ) volatile
 	{
 		return TryLockInline( threadId );
 	}
 
 	PLATFORM_CLASS void Lock( const uint32 threadId, unsigned nSpinSleepTime ) volatile;
+#else
+	bool TryLock( const uint64_t threadId ) volatile
+	{
+		return TryLockInline( threadId );
+	}
 
+	PLATFORM_CLASS void Lock( const uint64_t threadId, unsigned nSpinSleepTime ) volatile;
+
+#endif
 public:
 	bool TryLock() volatile
 	{
