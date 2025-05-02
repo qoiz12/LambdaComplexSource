@@ -39,8 +39,12 @@ Yes I could, if you do want this feature implemented, either join the Discord, o
 #### Hey somebody plagirized your code, what can I do to help?
 You can report their repository or if they have Discord, send me the link to it, and I will negotiate with the owner. Do not raid any servers, since these could just be kids.
 
-#### What compiles on Emscripten?
-Currently, tier1, tier2, and tier0 works on Emscripten (They compile), but currently, this is a work-in-progress, meaning that Emscripten isn't **FULLY** completed.
+#### What projects are currently ported to Emscripten?
+- tier0
+- tier1
+- tier2
+- tier3
+- mathlib
 
 ## Features
 
@@ -49,8 +53,6 @@ Currently, tier1, tier2, and tier0 works on Emscripten (They compile), but curre
 - **Vulkan renderer** [only in Linux] [also in L4D, HL2, Portal, Portal 2, Strata Source, Team Fortress 2, XenEngine]
 - x64 binaries [also in Garry's mod, Team Fortress 2]
 - Hammer port for Linux
-## Building
-View [Building wiki](https://github.com/LambdaComplexSource/LambdaComplexSource/wiki/Building)
 
 ## License
 
