@@ -1324,6 +1324,7 @@ inline Vector VectorLerp(const Vector& src1, const Vector& src2, vec_t t )
 inline Vector &AllocTempVector()
 {
 	static Vector s_vecTemp[128];
+	//class CInterlockedInt;
 	static CInterlockedInt s_nIndex;
 
 	int nIndex;

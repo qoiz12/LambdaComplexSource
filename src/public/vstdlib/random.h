@@ -9,6 +9,10 @@
 #ifndef VSTDLIB_RANDOM_H
 #define VSTDLIB_RANDOM_H
 
+//#if defined(__EMSCRIPTEN__)
+//#define __SPU__
+//#endif
+
 #if !defined( __SPU__ )
 
 #include "vstdlib/vstdlib.h"
@@ -61,7 +65,11 @@ private:
 	int m_iy;
 	int m_iv[NTAB];
 
+#if !defined(__EMSCRIPTEN__)
 	CThreadFastMutex m_mutex;
+#else
+	int	m_mutix[NTAB];
+#endif
 };
 
 
@@ -86,7 +94,11 @@ private:
 	bool	m_bHaveValue;
 	float	m_flRandomValue;
 
+#if !defined(__EMSCRIPTEN__)
 	CThreadFastMutex m_mutex;
+#else
+	int	m_mutex[NTAB];
+#endif
 };
 
 
@@ -109,6 +121,9 @@ VSTDLIB_INTERFACE void	InstallUniformRandomStream( IUniformRandomStream *pStream
 
 #endif // #if !defined( __SPU__ )
 
+//#if defined(__EMSCRIPTEN__)
+//#undef __SPU__
+//#endif
 
 #endif // VSTDLIB_RANDOM_H
 

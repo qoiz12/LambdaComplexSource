@@ -870,12 +870,18 @@ public:
 	T operator+( T rhs ) const		{ return m_value + rhs; }
 	T operator-( T rhs ) const		{ return m_value - rhs; }
 
+#if defined(__EMSCRIPTEN__)
+	T InterlockedExchange(T newValue) {
+			return (T)ThreadInterlockedExchange64((int64_t*)&m_value, newValue);
+	}
+#else
 	T InterlockedExchange(T newValue) {
 		if (sizeof(T) == sizeof(int32))
 			return (T)ThreadInterlockedExchange((int32*)&m_value, newValue);
 		else
 			return (T)ThreadInterlockedExchange64((int64*)&m_value, newValue);
 	}
+#endif
 
 private:
 	volatile T m_value;
