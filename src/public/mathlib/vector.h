@@ -52,7 +52,7 @@
 #include "vstdlib/random.h"
 
 #if defined(__EMSCRIPTEN__)
-extern inline void ThreadPause()
+extern inline void ThreadPause();
 #endif
 
 // Uncomment this to add extra Asserts to check for NANs, uninitialized vecs, etc.
