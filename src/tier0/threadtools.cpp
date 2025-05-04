@@ -2748,7 +2748,9 @@ PLATFORM_INTERFACE void SetCurThreadPS3( CThread *pThread )
 #else
 // The CThread implementation needs to be inlined for performance on the PS3 - It makes a difference of more than 1ms/frame
 // for other platforms, we include the .inl in the .cpp file where it existed before
+#if !defined(__EMSCRIPTEN__)
 #include "../public/tier0/threadtools.inl"
+#endif
 #endif
 
 //-----------------------------------------------------------------------------
