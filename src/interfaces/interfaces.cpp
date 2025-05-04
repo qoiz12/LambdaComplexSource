@@ -202,7 +202,9 @@ void RegisterInterface( CreateInterfaceFn factory, const char *pInterfaceName, v
 		*ppGlobal = factory( pInterfaceName, NULL );
 		if ( *ppGlobal )
 		{
+		#if !defined(__EMSCRIPTEN__)
 			Assert( s_nRegistrationCount < ARRAYSIZE(s_pConnectionRegistration) );
+		#endif
 			ConnectionRegistration_t &reg = s_pConnectionRegistration[s_nRegistrationCount++];
 			reg.m_ppGlobalStorage = ppGlobal;
 			reg.m_nConnectionPhase = s_nConnectionCount;

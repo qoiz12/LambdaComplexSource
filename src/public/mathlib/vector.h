@@ -51,6 +51,10 @@
 #include "tier0/memalloc.h"
 #include "vstdlib/random.h"
 
+#if defined(__EMSCRIPTEN__)
+extern inline void ThreadPause()
+#endif
+
 // Uncomment this to add extra Asserts to check for NANs, uninitialized vecs, etc.
 //#define VECTOR_PARANOIA	1
 
