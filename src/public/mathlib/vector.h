@@ -43,13 +43,13 @@
 
 #include "tier0/dbg.h"
 #include "tier0/platform.h"
-#if !defined( __SPU__ )
-#include "tier0/threadtools.h"
-#endif
 #include "mathlib/vector2d.h"
 #include "mathlib/math_pfns.h"
 #include "tier0/memalloc.h"
 #include "vstdlib/random.h"
+
+
+#include "tier0/threadtools.h"
 
 #if defined(__EMSCRIPTEN__)
 extern inline void ThreadPause();
@@ -1329,8 +1329,11 @@ inline Vector &AllocTempVector()
 {
 	static Vector s_vecTemp[128];
 	//class CInterlockedInt;
-	static CInterlockedInt s_nIndex;
+//#if defined(__EMSCRIPTEN__)
+//	extern typedef CInterlockedIntT<int> CInterlockedInt;
+//#endif
 
+	static CInterlockedInt s_nIndex;
 	int nIndex;
 	for (;;)
 	{

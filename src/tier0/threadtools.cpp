@@ -12,6 +12,10 @@
 #include <windows.h>
 #endif
 
+#if defined(__EMSCRIPTEN__)
+#define CTHREADLOCALINT CThreadLocalInt
+#endif
+
 #ifdef PLATFORM_WINDOWS
 	#include <process.h>
 	#ifdef PLATFORM_WINDOWS_PC

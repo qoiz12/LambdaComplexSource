@@ -814,12 +814,21 @@ public:
 
 
 	T operator=( T newValue )		{ 
+#if !defined(__EMSCRIPTEN)
 										if ( sizeof(T) == sizeof(int32) )
 											ThreadInterlockedExchange((int32 *)&m_value, newValue); 
 										else
 											ThreadInterlockedExchange64((int64 *)&m_value, newValue); 
 										return m_value; 
 									}
+#else
+										//if ( sizeof(T) == sizeof(int32) )
+										//	ThreadInterlockedExchange((int32 *)&m_value, newValue); 
+										//else
+											ThreadInterlockedExchange((int64_t *)&m_value, newValue); 
+										return m_value; 
+									}
+#endif
 
 	// Atomic add is like += except it returns the previous value as its return value
 	T AtomicAdd( T add )			{ 

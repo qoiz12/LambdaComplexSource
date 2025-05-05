@@ -301,7 +301,12 @@ PLATFORM_INTERFACE struct SDL_Window * GetAssertDialogParent();
 
 #else // DBGFLAG_ASSERT
 
-#define  Assert( _exp )										((void)0)
+#if !defined(__EMSCRIPTEN__)
+#define  Assert( _exp )	((void)0)
+#else
+#define Assert( _msg ) ((void)0)
+#endif
+
 #define  AssertOnce( _exp )									((void)0)
 #define  AssertMsg( _exp, _msg )							((void)0)
 #define  AssertMsgOnce( _exp, _msg )						((void)0)

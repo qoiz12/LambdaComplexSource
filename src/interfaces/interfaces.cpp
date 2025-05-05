@@ -217,7 +217,9 @@ void ReconnectInterface( CreateInterfaceFn factory, const char *pInterfaceName, 
 	*ppGlobal = factory( pInterfaceName, NULL );
 
 	bool bFound = false;
+#if !defined(__EMSCRIPTEN__)
 	Assert( s_nRegistrationCount < ARRAYSIZE(s_pConnectionRegistration) );
+#endif
 	for ( int i = 0; i < s_nRegistrationCount; ++i )
 	{
 		ConnectionRegistration_t &reg = s_pConnectionRegistration[i];
@@ -230,7 +232,9 @@ void ReconnectInterface( CreateInterfaceFn factory, const char *pInterfaceName, 
 
 	if ( !bFound && *ppGlobal )
 	{
+#if !defined(__EMSCRIPTEN__)
 		Assert( s_nRegistrationCount < ARRAYSIZE(s_pConnectionRegistration) );
+#endif		
 		ConnectionRegistration_t &reg = s_pConnectionRegistration[s_nRegistrationCount++];
 		reg.m_ppGlobalStorage = ppGlobal;
 		reg.m_nConnectionPhase = s_nConnectionCount;
@@ -275,7 +279,9 @@ void ConnectInterfaces( CreateInterfaceFn *pFactoryList, int nFactoryCount )
 
 void DisconnectInterfaces()
 {
+#if !defined(__EMSCRIPTEN__)
 	Assert( s_nConnectionCount > 0 );
+#endif
 	if ( --s_nConnectionCount < 0 )
 		return;
 

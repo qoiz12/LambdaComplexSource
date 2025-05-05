@@ -136,6 +136,7 @@ enum ScriptLanguage_t
 	SL_SQUIRREL,
 	SL_LUA,
 	SL_PYTHON,
+	SL_CSHARP,
 
 	SL_DEFAULT = SL_SQUIRREL
 };
