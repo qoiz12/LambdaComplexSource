@@ -24,8 +24,6 @@ PROJECTS = [
     'filesystem',
     'game/client',
     'game/server',
-    # 'hammer',
-    # 'hammer_launcher',
     'gcsdk',
     'generated_proto',
     'inputsystem',
@@ -35,6 +33,7 @@ PROJECTS = [
     'localize',
     'matchmaking',
     'materialsystem',
+    'materialsystem/shaderapivk',
     'materialsystem/shaderapidx9',
     'materialsystem/shaderlib',
     'materialsystem/stdshaders',
@@ -100,8 +99,8 @@ def options(opt):
         help = 'disable warnings')
     grp.add_option('--dedicated', action = 'store_true', dest = 'DEDICATED', default = False,
         help = 'build dedicated server')
-    grp.add_option('--gamedlls', action = 'store_true', dest = 'GAME_DLL', default = False,
-        help= 'Build only client, server, shaders and engine. Best for fast compiling.')
+    grp.add_option('--vulkan', action = 'store_true', dest = 'VULKAN', default = False,
+        help = 'Build utilizing Vulkan')
 
     opt.add_subproject(PROJECTS)
 
@@ -117,6 +116,7 @@ def configure(conf):
 
     conf.env.ALLOW64    =       conf.options.ALLOW64
     conf.env.DEDICATED  =       conf.options.DEDICATED
+    conf.env.VULKAN     =       conf.options.VULKAN
 
     if conf.env.DEST_OS == 'android':
         conf.env.BINPATH = conf.env.GAMEBIN = conf.env.PREFIX + '/lib'
@@ -279,6 +279,9 @@ def configure(conf):
 
     if conf.env.DEDICATED:
         conf.define('DEDICATED', True)
+
+    if conf.env.VULKAN:
+        conf.define('VULKAN', True)
 
     conf.env.append_unique('INCLUDES', includes)
 

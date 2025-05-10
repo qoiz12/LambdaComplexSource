@@ -53,7 +53,11 @@ bool CMatSysApp::Create()
 		return false;
 	}
 
+#ifndef VULKAN_ENABLED
 	pMaterialSystem->SetShaderAPI( "shaderapidx9.dll" );
+#else
+	pMaterialSystem->SetShaderAPI( "shaderapivk.dll" );
+#endif
 	return true;
 }
 

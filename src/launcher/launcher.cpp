@@ -859,7 +859,11 @@ bool CSourceAppSystemGroup::Create()
 
 	// Load up the appropriate shader DLL
 	// This has to be done before connection.
+#ifndef VULKAN_ENABLED
 	char const *pDLLName = "shaderapidx9" DLL_EXT_STRING;
+#else
+	char const *pDLLName = "shaderapivk" DLL_EXT_STRING;
+#endif
 	const char* pArg = NULL;
 	if ( CommandLine()->FindParm( "-noshaderapi" ) )
 	{
