@@ -11,6 +11,12 @@
 
 #include <limits.h>
 
+#if defined(_WIN32)
+// MSVC loves being a bitch when it comes to this
+#define int32_t int32
+#define int64_t int64
+#endif
+
 #include "tier0/platform.h"
 #include "tier0/dbg.h"
 
