@@ -1,6 +1,4 @@
 # Lambda Complex: Source
-[![ModDb](https://cdn-b.saashub.com/images/app/service_logos/10/3a7bcf6f5f44/small.png?1529181612)](https://www.moddb.com/mods/lambda-complex-source)
-
 
 **Lambda Complex: Source** is an open-source [Counter-Strike: Global Offensive](https://developer.valvesoftware.com/wiki/Counter-Strike:_Global_Offensive) modification
 for **PC** (Linux), Android, and WASM, which aims on recreating the [Half-Life: Opposing Force](https://developer.valvesoftware.com/wiki/Half-Life:_Opposing_Force) game developed
