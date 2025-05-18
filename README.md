@@ -6,12 +6,6 @@ Table of Contents
 * [Lambda Complex: Source](#lambda-complex-source)
    * [History](#history)
    * [FAQ](#faq)
-         * [What version of Source does this run on?](#what-version-of-source-does-this-run-on)
-         * [Is this legal to use?](#is-this-legal-to-use)
-         * [Can I use this as a base for my mod?](#can-i-use-this-as-a-base-for-my-mod)
-         * [Could you implement (insert feature here)](#could-you-implement-insert-feature-here)
-         * [Hey somebody plagirized your code, what can I do to help?](#hey-somebody-plagirized-your-code-what-can-i-do-to-help)
-         * [What projects are currently ported to Emscripten?](#what-projects-are-currently-ported-to-emscripten)
    * [Features](#features)
    * [License](#license)
 
