@@ -1,7 +1,6 @@
 # Lambda Complex: Source
 
-Table of Contents
-=================
+**TABLE OF CONTENTS**
 
 * [Lambda Complex: Source](#lambda-complex-source)
    * [History](#history)
