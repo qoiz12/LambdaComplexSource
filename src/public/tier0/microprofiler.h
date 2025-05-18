@@ -26,6 +26,8 @@ PLATFORM_INTERFACE int64 GetHardwareClockReliably();
 #include <sse2neon.h>
 #elif defined( IS_WINDOWS_PC )
 #include <intrin.h>	// get __rdtsc
+#elif defined( __EMSCRIPTEN__)
+#include <x86intrin.h>
 #endif
 
 
@@ -33,7 +35,7 @@ PLATFORM_INTERFACE int64 GetHardwareClockReliably();
 
 inline unsigned long long GetTimebaseRegister( void ) { return ( unsigned long long )_rdtsc(); }
 
-#elif defined(_LINUX) || defined( OSX )
+#elif defined(_LINUX) || defined( __EMSCRIPTEN__ )
 
 inline unsigned long long GetTimebaseRegister( void )
 {

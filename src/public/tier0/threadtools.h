@@ -404,7 +404,7 @@ PLATFORM_INTERFACE bool ThreadInterlockedAssignIf( int32 volatile *, int32 value
 #else
 PLATFORM_INTERFACE int64_t ThreadInterlockedIncrement( int64_t volatile * ) NOINLINE;
 PLATFORM_INTERFACE int64_t ThreadInterlockedDecrement( int64_t volatile * ) NOINLINE;
-PLATFORM_INTERFACE int64_t ThreadInterlockedExchange( int64_t volatile *, int64_t value ) NOINLINE;
+PLATFORM_INTERFACE int64_t ThreadInterlockedExchange( int64 volatile *, int64_t value ) NOINLINE;
 PLATFORM_INTERFACE int64_t ThreadInterlockedExchangeAdd( int64_t volatile *, int64_t value ) NOINLINE;
 PLATFORM_INTERFACE int64_t ThreadInterlockedCompareExchange( int64_t volatile *, int64_t value, int64_t comperand ) NOINLINE;
 PLATFORM_INTERFACE bool ThreadInterlockedAssignIf( int64_t volatile *, int64_t value, int64_t comperand ) NOINLINE;
@@ -501,7 +501,7 @@ inline unsigned ThreadInterlockedExchangeSubtract( uint64_t volatile *p, uint64_
 inline unsigned ThreadInterlockedIncrement( uint64_t volatile *p )										{ return ThreadInterlockedIncrement( (int64_t volatile *)p ); }
 inline unsigned ThreadInterlockedDecrement( uint64_t volatile *p )										{ return ThreadInterlockedDecrement( (int64_t volatile *)p ); }
 inline unsigned ThreadInterlockedExchange( uint64_t volatile *p, uint64_t value )							{ return ThreadInterlockedExchange( (int64_t volatile *)p, value ); }
-inline unsigned ThreadInterlockedExchangeAdd( uint64_t volatile *p, uint64_t value )						{ return ThreadInterlockedExchangeAdd( (int64_t volatile *)p, value ); }
+inline unsigned ThreadInterlockedExchangeAdd( unsigned int volatile *p, uint64_t value )						{ return ThreadInterlockedExchangeAdd( (int64_t volatile *)p, value ); }
 inline unsigned ThreadInterlockedCompareExchange( uint64_t volatile *p, uint64_t value, uint64_t comperand )	{ return ThreadInterlockedCompareExchange( (int64_t volatile *)p, value, comperand ); }
 inline bool ThreadInterlockedAssignIf( uint64_t volatile *p, uint64_t value, uint64_t comperand )				{ return ThreadInterlockedAssignIf( (int64_t volatile *)p, value, comperand ); }
 #endif

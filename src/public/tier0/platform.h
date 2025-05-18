@@ -978,6 +978,9 @@ typedef void * HINSTANCE;
 	#define id386	0
 #endif  // __i386__
 
+#if defined( __EMSCRIPTEN__ )
+#define __x86_64__
+#endif
 
 //-----------------------------------------------------------------------------
 // Disable annoying unhelpful warnings
