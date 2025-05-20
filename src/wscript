@@ -33,7 +33,7 @@ PROJECTS = [
     'localize',
     'matchmaking',
     'materialsystem',
-    'materialsystem/shaderapivk',
+    #'materialsystem/shaderapivk',
     'materialsystem/shaderapidx9',
     'materialsystem/shaderlib',
     'materialsystem/stdshaders',

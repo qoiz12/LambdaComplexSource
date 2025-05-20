@@ -20,9 +20,11 @@
 #include <emmintrin.h>
 #endif
 #endif
-#else
+
+#if defined(__EMSCRIPTEN__)
 #include <wasm_simd128.h>
-#include "../emscripten/sse_def.h"
+#include <emmintrin.h>
+#endif
 //#include <xmmintrin.h>
 //#include <emmintrin.h>
 #endif
@@ -3916,15 +3918,16 @@ FORCEINLINE fltx4 SinSIMD( const fltx4 &radians )
 
 
 // FIXME: Emscripten is case sensitive, and doesn't support SinCos, it must be sincos
-#if defined(__EMSCRIPTEN__)
-#define SinCos sincos
-#endif
+// Nevermind. Looks like it stopped bitching.
+//#if defined(__EMSCRIPTEN__)
+//#define SinCos sincos
+//#endif
 
 FORCEINLINE void SinCos3SIMD( fltx4 &sine, fltx4 &cosine, const fltx4 &radians )
 {
 	// FIXME: Make a fast SSE version
 	SinCos( SubFloat( radians, 0 ), &SubFloat( sine, 0 ), &SubFloat( cosine, 0 ) );
-	SinCos( static_cast<double>SubFloat( radians, 1 ), &SubFloat( sine, 1 ), &SubFloat( cosine, 1 ) );
+	SinCos( SubFloat( radians, 1 ), &SubFloat( sine, 1 ), &SubFloat( cosine, 1 ) );
 	SinCos( SubFloat( radians, 2 ), &SubFloat( sine, 2 ), &SubFloat( cosine, 2 ) );
 }
 
@@ -3932,7 +3935,7 @@ FORCEINLINE void SinCosSIMD( fltx4 &sine, fltx4 &cosine, const fltx4 &radians )	
 {
 	// FIXME: Make a fast SSE version
 	SinCos( SubFloat( radians, 0 ), &SubFloat( sine, 0 ), &SubFloat( cosine, 0 ) );
-	SinCos( static_cast<double>SubFloat( radians, 1 ), &SubFloat( sine, 1 ), &SubFloat( cosine, 1 ) );
+	SinCos( SubFloat( radians, 1 ), &SubFloat( sine, 1 ), &SubFloat( cosine, 1 ) );
 	SinCos( SubFloat( radians, 2 ), &SubFloat( sine, 2 ), &SubFloat( cosine, 2 ) );
 	SinCos( SubFloat( radians, 3 ), &SubFloat( sine, 3 ), &SubFloat( cosine, 3 ) );
 }

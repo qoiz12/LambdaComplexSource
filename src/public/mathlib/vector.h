@@ -49,7 +49,7 @@
 #include "vstdlib/random.h"
 
 
-#include "tier0/threadtools.h"
+#include "../tier0/threadtools.h"
 
 #if defined(__EMSCRIPTEN__)
 extern inline void ThreadPause();
