@@ -67,5 +67,4 @@ You can report their repository or if they have Discord, send me the link to it,
 
 ## License
 
-This project is licensed under **GPL version 3**.
-
+This project isn't licensed under any license. Just credit me
