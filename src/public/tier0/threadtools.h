@@ -402,12 +402,12 @@ PLATFORM_INTERFACE int32 ThreadInterlockedExchangeAdd( int32 volatile *, int32 v
 PLATFORM_INTERFACE int32 ThreadInterlockedCompareExchange( int32 volatile *, int32 value, int32 comperand ) NOINLINE;
 PLATFORM_INTERFACE bool ThreadInterlockedAssignIf( int32 volatile *, int32 value, int32 comperand ) NOINLINE;
 #else
-PLATFORM_INTERFACE int64_t ThreadInterlockedIncrement( int volatile * ) NOINLINE;
-PLATFORM_INTERFACE int64_t ThreadInterlockedDecrement( int volatile * ) NOINLINE;
-PLATFORM_INTERFACE int64_t ThreadInterlockedExchange( int volatile *, int64_t value ) NOINLINE;
-PLATFORM_INTERFACE int64_t ThreadInterlockedExchangeAdd( int volatile *, int64_t value ) NOINLINE;
-PLATFORM_INTERFACE int64_t ThreadInterlockedCompareExchange( int volatile *, int64_t value, int64_t comperand ) NOINLINE;
-PLATFORM_INTERFACE bool ThreadInterlockedAssignIf( int volatile *, int64_t value, int64_t comperand ) NOINLINE;
+PLATFORM_INTERFACE int ThreadInterlockedIncrement( int volatile * ) NOINLINE;
+PLATFORM_INTERFACE int ThreadInterlockedDecrement( int volatile * ) NOINLINE;
+PLATFORM_INTERFACE int ThreadInterlockedExchange( int volatile *, int value ) NOINLINE;
+PLATFORM_INTERFACE int ThreadInterlockedExchangeAdd( int volatile *, int value ) NOINLINE;
+PLATFORM_INTERFACE int ThreadInterlockedCompareExchange( int volatile *, int value, int comperand ) NOINLINE;
+PLATFORM_INTERFACE bool ThreadInterlockedAssignIf( int volatile *, int value, int comperand ) NOINLINE;
 #endif
 #endif
 
@@ -464,14 +464,14 @@ inline int64 ThreadInterlockedDecrement64( int64 volatile *p )
 
 
 #if defined(__EMSCRIPTEN__)
-inline int64_t ThreadInterlockedExchangeAdd( int64_t volatile *p, int64_t value )
+inline int64_t ThreadInterlockedExchangeAdd( int volatile *p, int value )
 {
 	Assert( ( (size_t)p ) % 8 == 0 ); 
 	return __sync_fetch_and_add( p, value );
 }
 
 
-inline bool ThreadInterlockedAssignIf( int64_t volatile *p, int64_t value, int64_t comperand )
+inline bool ThreadInterlockedAssignIf( int volatile *p, int value, int comperand )
 {
 	Assert( (size_t)p % 4 == 0 );
 	return __sync_bool_compare_and_swap( p, comperand, value );
@@ -498,12 +498,12 @@ inline bool ThreadInterlockedAssignIf( uint32 volatile *p, uint32 value, uint32 
 #else
 inline unsigned ThreadInterlockedExchangeSubtract( uint64_t volatile *p, uint64_t value )					{ return ThreadInterlockedExchangeAdd( (int64_t volatile *)p, value ); }
 
-inline unsigned ThreadInterlockedIncrement( uint64_t volatile *p )										{ return ThreadInterlockedIncrement( (int64_t volatile *)p ); }
-inline unsigned ThreadInterlockedDecrement( uint64_t volatile *p )										{ return ThreadInterlockedDecrement( (int64_t volatile *)p ); }
-inline unsigned ThreadInterlockedExchange( uint64_t volatile *p, uint64_t value )							{ return ThreadInterlockedExchange( (int64_t volatile *)p, value ); }
-inline unsigned ThreadInterlockedExchangeAdd( unsigned int volatile *p, uint64_t value )						{ return ThreadInterlockedExchangeAdd( (int64_t volatile *)p, value ); }
-inline unsigned ThreadInterlockedCompareExchange( uint64_t volatile *p, uint64_t value, uint64_t comperand )	{ return ThreadInterlockedCompareExchange( (int64_t volatile *)p, value, comperand ); }
-inline bool ThreadInterlockedAssignIf( uint64_t volatile *p, uint64_t value, uint64_t comperand )				{ return ThreadInterlockedAssignIf( (int64_t volatile *)p, value, comperand ); }
+inline unsigned ThreadInterlockedIncrement( unsigned int volatile *p )										{ return ThreadInterlockedIncrement( (int volatile *)p ); }
+inline unsigned ThreadInterlockedDecrement( unsigned int volatile *p )										{ return ThreadInterlockedDecrement( (int volatile *)p ); }
+inline unsigned ThreadInterlockedExchange( unsigned int volatile *p, unsigned int value )							{ return ThreadInterlockedExchange( (int volatile *)p, value ); }
+inline unsigned ThreadInterlockedExchangeAdd( unsigned int volatile *p, unsigned int value )						{ return ThreadInterlockedExchangeAdd( (int volatile *)p, value ); }
+inline unsigned ThreadInterlockedCompareExchange( unsigned int volatile *p, unsigned int  value, unsigned int comperand )	{ return ThreadInterlockedCompareExchange( (int volatile *)p, value, comperand ); }
+inline bool ThreadInterlockedAssignIf( unsigned int volatile *p, unsigned int value, unsigned int comperand )				{ return ThreadInterlockedAssignIf( (int volatile *)p, value, comperand ); }
 #endif
 
 //inline int ThreadInterlockedExchangeSubtract( int volatile *p, int value )	{ return ThreadInterlockedExchangeAdd( (int32 volatile *)p, value ); }
