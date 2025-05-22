@@ -811,7 +811,7 @@ public:
 										else
 	#endif
 	#if defined(__EMSCRIPTEN__)
-											return ThreadInterlockedAssignIf( (int64_t *)&m_value, (int64_t)newValue, (int64_t)conditionValue );
+											return ThreadInterlockedAssignIf( (int *)&m_value, (int)newValue, (int)conditionValue );
 	#else
 
 											return ThreadInterlockedAssignIf64( (int64 *)&m_value, (int64)newValue, (int64)conditionValue );
@@ -831,7 +831,7 @@ public:
 										//if ( sizeof(T) == sizeof(int32) )
 										//	ThreadInterlockedExchange((int32 *)&m_value, newValue); 
 										//else
-											ThreadInterlockedExchange((int64_t *)&m_value, newValue); 
+											ThreadInterlockedExchange((int *)&m_value, newValue); 
 										return m_value; 
 									}
 #endif
@@ -844,7 +844,7 @@ public:
 										else
 #endif
 #if defined(EMSCRIPTEN)
-											return (T)ThreadInterlockedExchangeAdd( (int64_t *)&m_value, (int64_t)add );
+											return (T)ThreadInterlockedExchangeAdd( (int *)&m_value, (int)add );
 #else
 
 											return (T)ThreadInterlockedExchangeAdd64( (int64_t *)&m_value, (int64_t)add );
@@ -859,7 +859,7 @@ public:
 										else
 #endif
 #if defined(__EMSCRIPTEN__)
-											ThreadInterlockedExchangeAdd( (int64_t *)&m_value, (int64_t)add );					
+											ThreadInterlockedExchangeAdd( (int *)&m_value, (int)add );					
 #else
 											ThreadInterlockedExchangeAdd64( (int64 *)&m_value, (int64)add );
 #endif
@@ -962,7 +962,7 @@ public:
 #endif // PLATFORM_64BITS
 #if defined(__EMSCRIPTEN__)
 #undef THREADINTERLOCKEDEXCHANGEADD
-#define THREADINTERLOCKEDEXCHANGEADD( _dest, _value )	ThreadInterlockedExchangeAdd( (int64_t *)_dest, _value )
+#define THREADINTERLOCKEDEXCHANGEADD( _dest, _value )	ThreadInterlockedExchangeAdd( (int *)_dest, _value )
 #endif
 	}
 
@@ -981,11 +981,11 @@ public:
 	T *operator--()					{ return ((T *)THREADINTERLOCKEDEXCHANGEADD( (int32 *)&m_value, -sizeof(T) )) - 1; }
 	T *operator--(int)				{ return (T *)THREADINTERLOCKEDEXCHANGEADD( (int32 *)&m_value, -sizeof(T) ); }
 #else
-	T *operator++()					{ return ((T *)THREADINTERLOCKEDEXCHANGEADD( (int64_t *)&m_value, sizeof(T) )) + 1; }
-	T *operator++(int)				{ return (T *)THREADINTERLOCKEDEXCHANGEADD( (int64_t *)&m_value, sizeof(T) ); }
+	T *operator++()					{ return ((T *)THREADINTERLOCKEDEXCHANGEADD( (int *)&m_value, sizeof(T) )) + 1; }
+	T *operator++(int)				{ return (T *)THREADINTERLOCKEDEXCHANGEADD( (int *)&m_value, sizeof(T) ); }
 
-	T *operator--()					{ return ((T *)THREADINTERLOCKEDEXCHANGEADD( (int64_t *)&m_value, -sizeof(T) )) - 1; }
-	T *operator--(int)				{ return (T *)THREADINTERLOCKEDEXCHANGEADD( (int64_t *)&m_value, -sizeof(T) ); }
+	T *operator--()					{ return ((T *)THREADINTERLOCKEDEXCHANGEADD( (int *)&m_value, -sizeof(T) )) - 1; }
+	T *operator--(int)				{ return (T *)THREADINTERLOCKEDEXCHANGEADD( (int *)&m_value, -sizeof(T) ); }
 #endif
 
 	bool AssignIf( T *conditionValue, T *newValue )	{ return ThreadInterlockedAssignPointerToConstIf( (void const **) &m_value, (void const *) newValue, (void const *) conditionValue ); }
@@ -994,7 +994,7 @@ public:
 #if !defined(EMSCRIPTEN)
 	void operator+=( int add )		{ THREADINTERLOCKEDEXCHANGEADD( (int32 *)&m_value, add * sizeof(T) ); }
 #else
-	void operator+=( int64_t add )		{ THREADINTERLOCKEDEXCHANGEADD( (int64_t *)&m_value, add * sizeof(T) ); }
+	void operator+=( int add )		{ THREADINTERLOCKEDEXCHANGEADD( (int *)&m_value, add * sizeof(T) ); }
 #endif
 	void operator-=( int subtract )	{ operator+=( -subtract ); }
 
@@ -1002,7 +1002,7 @@ public:
 #ifndef EMSCRIPTEN
 	T *AtomicAdd( int add ) { return ( T * ) THREADINTERLOCKEDEXCHANGEADD( (int32 *)&m_value, add * sizeof(T) ); }
 #else
-	T* AtomicAdd( int add ) { return ( T * ) THREADINTERLOCKEDEXCHANGEADD( (int64 *)&m_value, add * sizeof(T) ); }
+	T* AtomicAdd( int add ) { return ( T * ) THREADINTERLOCKEDEXCHANGEADD( (int *)&m_value, add * sizeof(T) ); }
 #endif
 
 	T *operator+( int rhs ) const		{ return m_value + rhs; }
@@ -1015,7 +1015,6 @@ public:
 private:
 	T * volatile m_value;
 
-#undef THREADINTERLOCKEDEXCHANGEADD
 };
 #endif
 
@@ -1125,7 +1124,7 @@ private:
 		if ( threadId != m_ownerID && !ThreadInterlockedAssignIf( (volatile int32 *)&m_ownerID, (int32)threadId, 0 ) )
 			return false;
 #else
-		if ( threadId != m_ownerID && !ThreadInterlockedAssignIf( (volatile int64_t *)&m_ownerID, (int64_t)threadId, 0 ) )
+		if ( threadId != m_ownerID && !ThreadInterlockedAssignIf( (volatile int *)&m_ownerID, (int)threadId, 0 ) )
 			return false;
 #endif
 		ThreadMemoryBarrier();
@@ -1141,12 +1140,12 @@ private:
 
 	PLATFORM_CLASS void Lock( const uint32 threadId, unsigned nSpinSleepTime ) volatile;
 #else
-	bool TryLock( const uint64_t threadId ) volatile
+	bool TryLock( const unsigned int threadId ) volatile
 	{
 		return TryLockInline( threadId );
 	}
 
-	PLATFORM_CLASS void Lock( const uint64_t threadId, unsigned nSpinSleepTime ) volatile;
+	PLATFORM_CLASS void Lock( const unsigned int threadId, unsigned nSpinSleepTime ) volatile;
 
 #endif
 public:
