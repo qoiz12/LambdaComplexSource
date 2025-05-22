@@ -51,11 +51,7 @@ Yes I could, if you do want this feature implemented, either join the Discord, o
 You can report their repository or if they have Discord, send me the link to it, and I will negotiate with the owner. Do not raid any servers, since these could just be kids.
 
 #### What projects are currently ported to Emscripten?
-- tier0
-- tier1
-- tier2
-- tier3
-- mathlib
+- launcher_main
 
 ## Features
 
