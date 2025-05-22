@@ -1233,7 +1233,9 @@ PLATFORM_INTERFACE void Plat_MessageBox( const char *pTitle, const tchar *pMessa
 #include <errno.h>
 #endif
 
+#if !defined(__EMSCRIPTEN__)
 #include <windows.h>
+#endif
 
 #endif // PLATFORM_POSIX
 

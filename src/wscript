@@ -240,7 +240,7 @@ def configure(conf):
             conf.define('_EMSCRIPTEN', True)
             conf.define('EMSCRIPTEN', True)
             conf.define('GNUC', True)
-            conf.define('_DLL_EXT', '.js', quote=False)
+            conf.define('_DLL_EXT', '.wasm', quote=False)
         if conf.env.DEST_OS == 'android':
             conf.define('ANDROID', True)
             conf.check_cc(lib='android', uselib_store='android')
