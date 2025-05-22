@@ -3548,7 +3548,11 @@ FORCEINLINE void StoreAlignedSIMD( float * RESTRICT pSIMD, const fltx4 & a )
 
 FORCEINLINE void StoreAlignedSIMD( short * RESTRICT pSIMD, const shortx8 & a )
 {
+#if !defined(__EMSCRIPTEN__)
 	_mm_store_si128( (shortx8 *)pSIMD, a );
+#else
+	wasm_v128_store( (shortx8 *)pSIMD, a);
+#endif
 }
 FORCEINLINE void StoreUnalignedSIMD( float * RESTRICT pSIMD, const fltx4 & a )
 {
@@ -3557,7 +3561,11 @@ FORCEINLINE void StoreUnalignedSIMD( float * RESTRICT pSIMD, const fltx4 & a )
 
 FORCEINLINE void StoreUnalignedSIMD(short* RESTRICT pSIMD, const shortx8& a)
 {
+#if !defined(__EMSCRIPTEN__)
 	_mm_storeu_si128((shortx8*)pSIMD, a);
+#else
+	wasm_v128_store((shortx8*)pSIMD, a);
+#endif
 }
 
 FORCEINLINE void StoreUnalignedFloat( float *pSingleFloat, const fltx4 & a )
@@ -3617,12 +3625,20 @@ FORCEINLINE fltx4 LoadAlignedSIMD( const void *pSIMD )
 
 FORCEINLINE shortx8 LoadAlignedShortSIMD( const void *pSIMD )
 {
+#if !defined(__EMSCRIPTEN__)
 	return _mm_load_si128( reinterpret_cast< const shortx8 *> ( pSIMD ) );
+#else
+	return wasm_v128_load( reinterpret_cast< const shortx8 *> ( pSIMD) );
+#endif
 }
 
 FORCEINLINE shortx8 LoadUnalignedShortSIMD( const void *pSIMD )
 {
+#if !defined(__EMSCRIPTEN__)
 	return _mm_loadu_si128( reinterpret_cast< const shortx8 *> ( pSIMD ) );
+#else
+	return wasm_v128_load( reinterpret_cast< const shortx8 *> ( pSIMD ) );
+#endif
 }
 
 FORCEINLINE fltx4 AndSIMD( const fltx4 & a, const fltx4 & b )				// a & b
@@ -4364,7 +4380,11 @@ FORCEINLINE fltx4 UnsignedIntConvertToFltSIMD( const u32x4 &vSrcA )
 // fixed point conversion is done.
 FORCEINLINE fltx4 SignedIntConvertToFltSIMD( const i32x4 &vSrcA )
 {
+#if !defined(__EMSCRIPTEN__)
 	return  _mm_cvtepi32_ps( (const __m128i &)vSrcA );
+#else
+	return wasm_f32x4_convert_i32x4( (const __m128i &)vSrcA );
+#endif
 }
 
 FORCEINLINE fltx4 SignedIntConvertToFltSIMD( const shortx8 &vSrcA )
