@@ -427,7 +427,7 @@ PLATFORM_INTERFACE bool ThreadInterlockedAssignPointerIf( void * volatile *, voi
 #if !defined(__EMSCRIPTEN__)
 inline unsigned ThreadInterlockedExchangeSubtract( int32 volatile *p, int32 value )	{ return ThreadInterlockedExchangeAdd( (int32 volatile *)p, -value ); }
 #else
-inline unsigned ThreadInterlockedExchangeSubtract( int64_t volatile *p, int64_t value ) { return ThreadInterlockedExchangeAdd( (int64_t volatile *)p, -value ); }
+inline unsigned ThreadInterlockedExchangeSubtract( int volatile *p, int value ) { return ThreadInterlockedExchangeAdd( (int volatile *)p, -value ); }
 #endif
 
 inline void const *ThreadInterlockedExchangePointerToConst( void const * volatile *p, void const *value )							{ return ThreadInterlockedExchangePointer( const_cast < void * volatile * > ( p ), const_cast < void * > ( value ) );  }
@@ -464,7 +464,7 @@ inline int64 ThreadInterlockedDecrement64( int64 volatile *p )
 
 
 #if defined(__EMSCRIPTEN__)
-inline int64_t ThreadInterlockedExchangeAdd( int volatile *p, int value )
+inline int ThreadInterlockedExchangeAdd( int volatile *p, int value )
 {
 	Assert( ( (size_t)p ) % 8 == 0 ); 
 	return __sync_fetch_and_add( p, value );
@@ -496,7 +496,7 @@ inline unsigned ThreadInterlockedExchangeAdd( uint32 volatile *p, uint32 value )
 inline unsigned ThreadInterlockedCompareExchange( uint32 volatile *p, uint32 value, uint32 comperand )	{ return ThreadInterlockedCompareExchange( (int32 volatile *)p, value, comperand ); }
 inline bool ThreadInterlockedAssignIf( uint32 volatile *p, uint32 value, uint32 comperand )				{ return ThreadInterlockedAssignIf( (int32 volatile *)p, value, comperand ); }
 #else
-inline unsigned ThreadInterlockedExchangeSubtract( uint64_t volatile *p, uint64_t value )					{ return ThreadInterlockedExchangeAdd( (int64_t volatile *)p, value ); }
+inline unsigned ThreadInterlockedExchangeSubtract( unsigned int volatile *p, unsigned int value )					{ return ThreadInterlockedExchangeAdd( (int volatile *)p, value ); }
 
 inline unsigned ThreadInterlockedIncrement( unsigned int volatile *p )										{ return ThreadInterlockedIncrement( (int volatile *)p ); }
 inline unsigned ThreadInterlockedDecrement( unsigned int volatile *p )										{ return ThreadInterlockedDecrement( (int volatile *)p ); }
@@ -780,7 +780,7 @@ public:
 										else
 #endif
 #if defined(EMSCRIPTEN)
-											return (T)ThreadInterlockedIncrement( (int64_t *)&m_value );
+											return (T)ThreadInterlockedIncrement( (int *)&m_value );
 #else
 											return (T)ThreadInterlockedIncrement64( (int64 *)&m_value );
 #endif
@@ -794,7 +794,7 @@ public:
 										else
 	#endif
 	#if defined(__EMSCRIPTEN__)
-											return (T)ThreadInterlockedDecrement( (int64_t *)&m_value );
+											return (T)ThreadInterlockedDecrement( (int *)&m_value );
 	#else
 											return (T)ThreadInterlockedDecrement64( (int64 *)&m_value );
 	#endif								
