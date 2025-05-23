@@ -3,6 +3,8 @@
 > [!TIP]
 > Starring this repository, allows us to promote this repository to more users, so do please Star this Repo as it will help a ton!
 
+* [Discord Link](https://discord.com/invite/5Gpr5TSkJ4)
+* [Steam Community Link](https://steamcommunity.com/groups/lambda-complex-source)
 
 **TABLE OF CONTENTS**
 
@@ -63,4 +65,4 @@ You can report their repository or if they have Discord, send me the link to it,
 
 ## License
 
-This project isn't licensed under any license. Just credit me
+This project is licensed under MIT.
