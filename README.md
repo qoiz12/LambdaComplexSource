@@ -69,3 +69,8 @@ You can report their repository or if they have Discord, send me the link to it,
 ## License
 
 This project is licensed under MIT.
+
+## Credits
+
+Android support from nillerusr/source-engine
+Vulkan related projects from stephen-cusi/OpenCSGO
