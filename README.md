@@ -65,4 +65,4 @@ You can report their repository or if they have Discord, send me the link to it,
 
 ## License
 
-This project isn't licensed under any license. Just credit me
+This project is licensed under MIT.
