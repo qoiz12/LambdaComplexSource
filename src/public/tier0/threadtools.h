@@ -1217,14 +1217,14 @@ public:
 #if !defined(EMSCRIPTEN)
 	uint32 GetOwnerId() const			{ return m_ownerID;	}
 #else
-	uint64_t GetOwnerId() const			{return m_ownerID;	}
+	unsigned int GetOwnerId() const			{return m_ownerID;	}
 #endif
 	int	GetDepth() const				{ return m_depth; }
 private:
 #if !defined(EMSCRIPTEN)
 	volatile uint32 m_ownerID;
 #else
-	volatile uint64_t m_ownerID;
+	volatile unsigned int m_ownerID;
 #endif
 	int				m_depth;
 };

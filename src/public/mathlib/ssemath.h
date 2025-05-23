@@ -23,6 +23,7 @@
 
 #if defined(__EMSCRIPTEN__)
 #include <wasm_simd128.h>
+#include <xmmintrin.h>
 #include <emmintrin.h>
 #endif
 //#include <xmmintrin.h>
