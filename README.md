@@ -72,5 +72,5 @@ This project is licensed under MIT.
 
 ## Credits
 
-Android support from nillerusr/source-engine
-Vulkan related projects from stephen-cusi/OpenCSGO
+* Android support from nillerusr/source-engine
+* Vulkan related projects from stephen-cusi/OpenCSGO
