@@ -1,5 +1,9 @@
 # Lambda Complex: Source
 
+> [!WARNING]
+> This public repository is no longer going to be up-to-date with the current Lambda Complex: Source source code. Lambda Complex is now in private development under Orbita Studios.
+
+
 > [!TIP]
 > Starring this repository, allows us to promote this repository to more users, so do please Star this Repo as it will help a ton!
 
