@@ -89,8 +89,10 @@
 //////////////////////////////////////////////////////////////////////////
 
 class CLoggingSystem;
-class CThreadFastMutex;
 
+#ifndef EMSCRIPTEN
+class CThreadFastMutex;
+#endif
 //-----------------------------------------------------------------------------
 // Maximum length of a sprintf'ed logging message.
 //-----------------------------------------------------------------------------
@@ -643,6 +645,9 @@ private:
 	// Protects all data in this class except the registered channels 
 	// (which are supposed to be registered using the macros at static/global init time).
 	// It is assumed that this mutex is reentrant safe on all platforms.
+#if defined(__EMSCRIPTEN__)
+	class CThreadFastMutex;
+#endif
 	CThreadFastMutex *m_pStateMutex;
 	
 	// The index of the current "global" state of the logging system.  By default, all threads use this state

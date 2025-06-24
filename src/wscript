@@ -11,29 +11,6 @@ default_prefix = os.path.abspath('../game')
 
 Context.Context.line_just = 60 # should fit for everything on 80x26
 
-
-PROJECTS_GAME_DLL = [
-    'engine',
-    'engine/voice_codecs/celt',
-    'filesystem',
-    'game/client',
-    'game/server',
-    # 'hammer',
-    # 'hammer_launcher',
-    'launcher_main',
-    'materialsystem',
-    'materialsystem/shaderapidx9',
-    'materialsystem/shaderlib',
-    'materialsystem/stdshaders',
-    'mathlib',
-    'thirdparty/celt-v0.11.3',
-    'tier0',
-    'tier1',
-    'tier2',
-    'tier3',
-    'vscript'#,
-]
-
 PROJECTS = [
     'appframework',
     'bitmap',
@@ -47,8 +24,6 @@ PROJECTS = [
     'filesystem',
     'game/client',
     'game/server',
-    # 'hammer',
-    # 'hammer_launcher',
     'gcsdk',
     'generated_proto',
     'inputsystem',
@@ -58,6 +33,7 @@ PROJECTS = [
     'localize',
     'matchmaking',
     'materialsystem',
+    #'materialsystem/shaderapivk',
     'materialsystem/shaderapidx9',
     'materialsystem/shaderlib',
     'materialsystem/stdshaders',
@@ -123,8 +99,8 @@ def options(opt):
         help = 'disable warnings')
     grp.add_option('--dedicated', action = 'store_true', dest = 'DEDICATED', default = False,
         help = 'build dedicated server')
-    grp.add_option('--gamedlls', action = 'store_true', dest = 'GAME_DLL', default = False,
-        help= 'Build only client, server, shaders and engine. Best for fast compiling.')
+    grp.add_option('--vulkan', action = 'store_true', dest = 'VULKAN', default = False,
+        help = 'Build utilizing Vulkan')
 
     opt.add_subproject(PROJECTS)
 
@@ -140,6 +116,7 @@ def configure(conf):
 
     conf.env.ALLOW64    =       conf.options.ALLOW64
     conf.env.DEDICATED  =       conf.options.DEDICATED
+    conf.env.VULKAN     =       conf.options.VULKAN
 
     if conf.env.DEST_OS == 'android':
         conf.env.BINPATH = conf.env.GAMEBIN = conf.env.PREFIX + '/lib'
@@ -177,9 +154,12 @@ def configure(conf):
         conf.env.append_unique('CFLAGS_cshlib', ['-fPIC'])
         conf.env.append_unique('CXXFLAGS_cxxshlib', ['-fPIC'])
 
-#   if conf.env.COMPILER_CC not in ['emcc']:
-#       conf.check_cc(cflags=cflags, linkflags=linkflags, msg='Checking for required C flags')
-#        conf.check_cxx(cxxflags=cxxflags, linkflags=linkflags, msg='Checking for required C++ flags')
+    if conf.env.COMPILER_CC in ['emcc']:
+        conf.env.append_value('LINKFLAGS', ['-sWASM=1'])
+        conf.env.append_value('CXXFLAGS', ['-Wno-unused-command-line-argument'])
+        conf.env.append_value('CXXFLAGS', ['-msimd128'])
+        conf.env.append_value('LINKFLAGS', ['-msimd128'])
+
 
     conf.env.append_unique('CFLAGS', cflags)
     conf.env.append_unique('CXXFLAGS', cxxflags)
@@ -198,8 +178,6 @@ def configure(conf):
         opt_flags += ['-fcolor-diagnostics']
     # Easier to debug errors
         opt_flags += ['-ferror-limit=1']
-        opt_flags += ['-s WASM=1']
-        #opt_flags += ['-s MODULARIZE=1']
     elif conf.env.COMPILER_CC == 'gcc':
         opt_flags += ['-fdiagnostics-color=always']
 
@@ -242,6 +220,10 @@ def configure(conf):
     elif conf.env.COMPILER_CC in ['gcc', 'clang']:
         conf.define('COMPILER_GCC', True)
 
+#    if conf.env.COMPILER_CC == 'emcc':
+#        conf.define('__SSE__', True)
+#        conf.define('__SSE2__', True)
+
     if conf.env.DEST_OS == 'win32': # TODO: IMPLETE ME!
         conf.define('_WIN32', True)
         conf.define('_DLL_EXT', '.dll', quote=False)
@@ -254,11 +236,11 @@ def configure(conf):
             conf.define('LINUX', True)
             conf.define('GNUC', True)
             conf.define('_DLL_EXT', '.so', quote=False)
-        if conf.env.DEST_OS == 'emscripten':
+        if conf.env.COMPILER_CC == 'emcc':
             conf.define('_EMSCRIPTEN', True)
             conf.define('EMSCRIPTEN', True)
             conf.define('GNUC', True)
-            conf.define('_DLL_EXT', '.js', quote=False)
+            conf.define('_DLL_EXT', '.wasm', quote=False)
         if conf.env.DEST_OS == 'android':
             conf.define('ANDROID', True)
             conf.check_cc(lib='android', uselib_store='android')
@@ -274,6 +256,8 @@ def configure(conf):
     conf.define('CSTRIKE_REL_BUILD', True)
     conf.define('VPROF_LEVEL', True)
     conf.define('RAD_TELEMETRY_DISABLED', True)
+    # The Source Engine lacks this feature, and this was never really used ever.
+    #conf.define('IRONSIGHT_ENABLE', True)
 
     if conf.env.DEST_OS != 'win32':
         conf.define('DX_TO_VK_ABSTRACTION', True)
@@ -295,6 +279,9 @@ def configure(conf):
 
     if conf.env.DEDICATED:
         conf.define('DEDICATED', True)
+
+    if conf.env.VULKAN:
+        conf.define('VULKAN', True)
 
     conf.env.append_unique('INCLUDES', includes)
 

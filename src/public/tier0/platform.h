@@ -14,6 +14,9 @@
 #if defined( __EMSCRIPTEN__)
 #include <time.h>
 #include <emscripten/emscripten.h>
+// Missing a bunch of std shit.
+#include <stdio.h>
+#include <stdarg.h>
 #endif
 
 #if defined( LINUX ) && ((__GNUC__ * 100) + __GNUC_MINOR__) >= 406
@@ -975,6 +978,9 @@ typedef void * HINSTANCE;
 	#define id386	0
 #endif  // __i386__
 
+#if defined( __EMSCRIPTEN__ )
+#define __x86_64__
+#endif
 
 //-----------------------------------------------------------------------------
 // Disable annoying unhelpful warnings
@@ -1227,7 +1233,9 @@ PLATFORM_INTERFACE void Plat_MessageBox( const char *pTitle, const tchar *pMessa
 #include <errno.h>
 #endif
 
+#if !defined(__EMSCRIPTEN__)
 #include <windows.h>
+#endif
 
 #endif // PLATFORM_POSIX
 
@@ -1793,14 +1801,16 @@ inline uint64 Plat_Rdtsc()
 	uint64 val;
 	__asm__ __volatile__ ( "rdtsc" : "=A" (val) );
 	return val;
-#elif defined( __x86_64__ )
+#elif defined( __x86_64__ ) && !defined( __EMSCRIPTEN__ )
 	uint32 lo, hi;
 	__asm__ __volatile__ ( "rdtsc" : "=a" (lo), "=d" (hi));
 	return ( ( ( uint64 )hi ) << 32 ) | lo;
 #elif defined( __EMSCRIPTEN__ )
-uint64 val {
-    return (uint64_t)(emscripten_get_now() * 1000.0); // microseconds
-};
+// TODO: Recreate the rdtsc loader func to Emscripten
+//uint64 val {
+//    return emscripten_get_now * 1000.0(); // microseconds
+//};
+uint64 val;
 #else
 #error
 #endif

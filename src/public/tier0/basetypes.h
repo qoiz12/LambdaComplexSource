@@ -8,7 +8,7 @@
 #ifndef BASETYPES_H
 #define BASETYPES_H
 
-#ifdef COMPILER_MSVC
+#ifdef _WIN32
 #pragma once
 #endif
 
@@ -29,6 +29,9 @@
 #define TYPEMETA( ... )
 
 
+// Both posix and windows require math.h, fuck you nn-firc
+#include <math.h>
+
 #ifdef COMPILING_SCHEMA
 #define UNSCHEMATIZED_METHOD( x )
 #else
@@ -42,8 +45,8 @@
 #include "wchartypes.h"
 #ifdef _PS3
 #include <float.h>
-#elif defined( PLATFORM_POSIX )
-#include <math.h>
+//#elif defined( PLATFORM_POSIX )
+//#include <math.h>
 #endif
 
 #include "tier0/valve_off.h"

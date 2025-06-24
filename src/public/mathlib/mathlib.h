@@ -15,6 +15,10 @@
 #include "mathlib/math_pfns.h"
 #include "mathlib/fltx4.h"
 
+#if defined(EMSCRIPTEN)
+typedef int qboolean;
+#endif
+
 #ifndef ALIGN8_POST
 #define ALIGN8_POST
 #endif
@@ -470,7 +474,7 @@ inline float CrossProductZ( const Vector & v1, const Vector& v2 )
 	return v1.x * v2.y - v1.y * v2.x;
 }
 
-qboolean VectorsEqual( const float *v1, const float *v2 );
+int VectorsEqual( const float *v1, const float *v2 );
 
 inline vec_t RoundInt (vec_t in)
 {
@@ -1600,13 +1604,17 @@ FORCEINLINE int RoundFloatToInt(float f)
 #endif
 #else // !X360
 	int nResult;
+//#if defined(EMSCRIPTEN)
+//#undef GNUC
+//#endif
+
 #if defined( COMPILER_MSVC32 )
 	__asm
 	{
 		fld f
 		fistp nResult
 	}
-#elif GNUC && !defined( __aarch64__ )
+#elif GNUC && !defined( __EMSCRIPTEN__ )
 	__asm __volatile__ (
 		"fistpl %0;": "=m" (nResult): "t" (f) : "st"
 	);
@@ -1615,6 +1623,10 @@ FORCEINLINE int RoundFloatToInt(float f)
 #endif
 	return nResult;
 #endif
+
+//#ifdef EMSCRIPTEN
+//#define GNUC 1
+//#endif
 }
 
 FORCEINLINE unsigned char RoundFloatToByte(float f)
@@ -1653,12 +1665,18 @@ FORCEINLINE unsigned char RoundFloatToByte(float f)
 		fld f
 		fistp nResult
 	}
-#elif GNUC && !defined( __aarch64__ )
+#elif GNUC
+// TODO: Convert to Emscripten
+//#if defined(__EMSCRIPTEN__)
+//	double f = 3.14159;
+//	nResult = static_cast<unsigned int> (f) & 0xff;
+//#endif	
+
+#if !defined(__EMSCRIPTEN__)
 	__asm __volatile__ (
 		"fistpl %0;": "=m" (nResult): "t" (f) : "st"
 	);
-#else
-	nResult = static_cast<unsigned int> (f) & 0xff;
+#endif
 #endif
 
 #ifdef Assert
@@ -1700,7 +1718,7 @@ FORCEINLINE unsigned long RoundFloatToUnsignedLong(float f)
 		fistp       qword ptr nResult
 	}
 	return *((unsigned long*)nResult);
-#elif defined( COMPILER_GCC ) && !defined( __aarch64__ )
+#elif defined( COMPILER_GCC ) && !defined( __EMSCRIPTEN__ )
 	unsigned char nResult[8];
 	__asm __volatile__ (
 		"fistpl %0;": "=m" (nResult): "t" (f) : "st"
