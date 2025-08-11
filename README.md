@@ -7,7 +7,7 @@
 > [!TIP]
 > Starring this repository, allows us to promote this repository to more users, so do please Star this Repo as it will help a ton!
 
-**The social links below are dead**
+**The social links below are dead:**
 * [Discord Link](https://discord.com/invite/5Gpr5TSkJ4)
 * [Steam Community Link](https://steamcommunity.com/groups/lambda-complex-source)
 
